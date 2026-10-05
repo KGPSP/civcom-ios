@@ -65,6 +65,7 @@ class UserProfileScreenViewModel: UserProfileScreenViewModelType, UserProfileScr
         case .createDirectChat:
             Task { await createDirectChat() }
         case .startCall(let roomID, let isVoiceCall):
+            guard CIVCOMPolicy.callsEnabled else { return }
             Task { await startCall(roomID: roomID, isVoiceCall: isVoiceCall) }
         case .dismiss:
             actionsSubject.send(.dismiss)

@@ -181,7 +181,7 @@ final class NotificationManager: NSObject, NotificationManagerProtocol {
     private func setPusher(with deviceToken: Data, clientProxy: ClientProxyProtocol) async -> Bool {
         do {
             let defaultPayload = APNSPayload(aps: APSInfo(mutableContent: 1,
-                                                          alert: APSAlert(locKey: "Notification",
+                                                          alert: APSAlert(locKey: nil,
                                                                           locArgs: [])),
                                              pusherNotificationClientIdentifier: clientProxy.pusherNotificationClientIdentifier)
             

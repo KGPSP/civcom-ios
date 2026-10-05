@@ -31,13 +31,14 @@ class SettingsScreenViewModel: SettingsScreenViewModelType, SettingsScreenViewMo
                                            userProfile: userSession.clientProxy.userProfilePublisher.value,
                                            showLinkNewDeviceButton: appSettings.linkNewDeviceEnabled,
                                            showAccountDeactivation: userSession.clientProxy.canDeactivateAccount,
-                                           showDeveloperOptions: appSettings.developerOptionsEnabled,
+                                           showDeveloperOptions: CIVCOMPolicy.developerOptionsEnabled,
                                            showAnalyticsSettings: appSettings.canPromptForAnalytics,
                                            isBugReportServiceEnabled: isBugReportServiceEnabled,
                                            navigationBarVisibility: isInSecondaryWindow ? .hidden : .automatic),
                    mediaProvider: userSession.mediaProvider)
         
         appSettings.developerOptionsEnabledPublisher
+            .map { _ in CIVCOMPolicy.developerOptionsEnabled }
             .weakAssign(to: \.state.showDeveloperOptions, on: self)
             .store(in: &cancellables)
         
@@ -138,8 +139,10 @@ class SettingsScreenViewModel: SettingsScreenViewModelType, SettingsScreenViewMo
         case .labs:
             actionsSubject.send(.labs)
         case .enableDeveloperOptions:
+            guard CIVCOMPolicy.developerOptionsEnabled else { return }
             appSettings.developerOptionsEnabled.toggle()
         case .developerOptions:
+            guard CIVCOMPolicy.developerOptionsEnabled else { return }
             actionsSubject.send(.developerOptions)
         case .deactivateAccount:
             actionsSubject.send(.deactivateAccount)

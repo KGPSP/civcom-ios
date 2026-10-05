@@ -1,7 +1,7 @@
 ---
 name: ElementX
 attributes:
-  ORGANIZATIONNAME: Element
+  ORGANIZATIONNAME: KG PSP
   LastUpgradeCheck: "1620"
   
 fileGroups:
@@ -47,14 +47,24 @@ options:
   postGenCommand: cd Tools/XcodeGen && sh postGenCommand.sh
 
 settings:
-  CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: true
-  ENABLE_BITCODE: false
-  APP_NAME: ElementX
-  KEYCHAIN_ACCESS_GROUP_IDENTIFIER: "$(DEVELOPMENT_TEAM).$(BASE_BUNDLE_IDENTIFIER)"
-  MARKETING_VERSION: 26.09.2
-  CURRENT_PROJECT_VERSION: 1
-  SUPPORTS_MACCATALYST: false
-  ARCHS: arm64
+  configs:
+    Debug:
+      APNS_ENVIRONMENT: development
+      BASE_BUNDLE_IDENTIFIER: pl.gov.psp.civcom.dev
+      APP_GROUP_IDENTIFIER: group.pl.gov.psp.civcom.dev
+    Release:
+      APNS_ENVIRONMENT: production
+      BASE_BUNDLE_IDENTIFIER: pl.gov.psp.civcom
+      APP_GROUP_IDENTIFIER: group.pl.gov.psp.civcom
+  base:
+    CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: true
+    ENABLE_BITCODE: false
+    APP_NAME: CIVCOM
+    KEYCHAIN_ACCESS_GROUP_IDENTIFIER: "$(AppIdentifierPrefix)$(BASE_BUNDLE_IDENTIFIER)"
+    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: 1
+    SUPPORTS_MACCATALYST: false
+    ARCHS: arm64
 
 include:
 - path: app.yml

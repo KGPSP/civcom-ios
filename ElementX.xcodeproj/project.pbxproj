@@ -164,6 +164,7 @@
 		18386B777FDA74E4B3282D4F /* TimelineItemThreadSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C6A082F2B2A15E1B9BE280 /* TimelineItemThreadSummary.swift */; };
 		1866A34DBAD0F730058CB3C3 /* ClassicAppMediaLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC3F28DECDF8665E8EBC76E /* ClassicAppMediaLoaderTests.swift */; };
 		18867F4F1C8991EEC56EA932 /* UTType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897DF5E9A70CE05A632FC8AF /* UTType.swift */; };
+		18DDD8334CF426106030C047 /* CIVCOMPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F298CCC204E170F711B20B0D /* CIVCOMPolicyTests.swift */; };
 		18E3786918486D4C9726BC84 /* FormButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FBFC09F9DAFF1E4BA97849 /* FormButtonStyles.swift */; };
 		18FD4EA36456910FD9CB1B95 /* RoomLiveLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118892B93A8CFDD691D9B5E3 /* RoomLiveLocationService.swift */; };
 		18FDE4ED6D83B0771452B43D /* RoomSelectionScreenCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F104596B0620CEFE5DFD31B1 /* RoomSelectionScreenCoordinator.swift */; };
@@ -458,6 +459,7 @@
 		494970EA811FE4D93AC68482 /* SettingsScreenViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FE8A35B4AD5256F4B562274 /* SettingsScreenViewModelTests.swift */; };
 		4949C8C12669D1B5E082366E /* QRCodeLoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA9EA59D5C0DA1BFC7B3621 /* QRCodeLoginScreen.swift */; };
 		49500BBA1CD65A5AE252D970 /* RoomDirectorySearchScreenModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BB37D96C3EA18F3CE8675D /* RoomDirectorySearchScreenModels.swift */; };
+		4958A65B1B3D08EE71EE8499 /* CIVCOMPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBC7467F6FD822F32255483 /* CIVCOMPolicy.swift */; };
 		49BBEC46D523BF6A41400048 /* URLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB34956C87731AB094DB33A /* URLTests.swift */; };
 		4A091BAF20F4D27DF66B7F0A /* PresentationColorSchemeModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6E8208542BE7A02A94939 /* PresentationColorSchemeModifier.swift */; };
 		4A361E8BAFFA20B9719B47F5 /* InviteUsersConfirmationSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E97CF050B0168F3D605F0E9 /* InviteUsersConfirmationSheetView.swift */; };
@@ -901,6 +903,7 @@
 		8BCA60848A55E0093E920B98 /* TimelineMediaContentScanningFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7D79FA27D094146E2B5C9D /* TimelineMediaContentScanningFailureView.swift */; };
 		8BD22815DC34D7F9E9C1F2FE /* PillUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C537DE821FED94D23467B6C4 /* PillUtilities.swift */; };
 		8C050A8012E6078BEAEF5BC8 /* PillTextAttachmentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913C8E13B8B602C7B6C0C4AE /* PillTextAttachmentData.swift */; };
+		8C13C19304C56F84EF41E8BB /* CIVCOMDisabledLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00816AB043749F59D9824602 /* CIVCOMDisabledLocationManager.swift */; };
 		8C1A5ECAF895D4CAF8C4D461 /* AppActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F21ED7205048668BEB44A38 /* AppActivityView.swift */; };
 		8C706DA7EAC0974CA2F8F1CD /* MentionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15748C254911E3654C93B0ED /* MentionBuilder.swift */; };
 		8C91D242BEEC657FABCC0B95 /* BlockedUsersScreenModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8642512079EEFD622E3AA66B /* BlockedUsersScreenModels.swift */; };
@@ -1136,8 +1139,10 @@
 		B188D0907A4D38AAAF6FEFA8 /* AppLockSetupFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DBB08A95EFA668F2CF27211 /* AppLockSetupFlowCoordinator.swift */; };
 		B1ABFEB75E0202370BD7353A /* RoomListServiceSDKMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3454C79D9E2444BBDBF9F5A /* RoomListServiceSDKMock.swift */; };
 		B1B255CE0E4306DD6E09D936 /* EncryptionResetPasswordScreenModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E6F398C269AD52C9AE21 /* EncryptionResetPasswordScreenModels.swift */; };
+		B1FFA5BB7DE024144D845D4D /* CIVCOMPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBC7467F6FD822F32255483 /* CIVCOMPolicy.swift */; };
 		B22D857D1E8FCA6DD74A58E3 /* UserSessionScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F899D02CF26EA7675EEBE74C /* UserSessionScreenTests.swift */; };
 		B245583C63F8F90357B87FAE /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = CCE5BF78B125320CBF3BB834 /* PostHog */; };
+		B2D198DF90C8D33FC8BCCB68 /* CIVCOMDisabledAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14999EDD953D56D0A1585CCA /* CIVCOMDisabledAnalyticsClient.swift */; };
 		B2F8E01ABA1BA30265B4ECBE /* RoundedCornerShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839E2C35DF3F9C7B54C3CE49 /* RoundedCornerShape.swift */; };
 		B2FDF69AC0C316F12142F91A /* RoomMembershipDetailsProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B09A94C519227264A41208 /* RoomMembershipDetailsProxy.swift */; };
 		B3D652AA1654270742072FB3 /* DeveloperOptionsScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A6F283BC574FDB96ABBB07 /* DeveloperOptionsScreenViewModel.swift */; };
@@ -1168,6 +1173,7 @@
 		B773ACD8881DB18E876D950C /* WaveformSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94028A227645FA880B966211 /* WaveformSource.swift */; };
 		B7888FC1E1DEF816D175C8D6 /* SecureBackupKeyBackupScreenModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD72A9B720D75DBE60AC299F /* SecureBackupKeyBackupScreenModels.swift */; };
 		B796A25F282C0A340D1B9C12 /* ImageRoomTimelineItemContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B5EDCD05D50BA9B815C66C /* ImageRoomTimelineItemContent.swift */; };
+		B79C722D2474D7CBEEE821FD /* CIVCOMPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBC7467F6FD822F32255483 /* CIVCOMPolicy.swift */; };
 		B79E8AB83EBBDCD476D0362F /* PollFormScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D622EC7898469BB1D0881CDD /* PollFormScreen.swift */; };
 		B7C9E07F4F9CCC8DD7156A20 /* CallScreenModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28146817C61423CACCF942F5 /* CallScreenModels.swift */; };
 		B7F58D6903F9D509EDAB9E4F /* MediaEventsTimelineScreenModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7033218DA395B003F7AB29A2 /* MediaEventsTimelineScreenModels.swift */; };
@@ -1362,6 +1368,7 @@
 		D6152E21036B88C44ECB22E7 /* EncryptionResetPasswordScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303D9438EFB481F57A366E82 /* EncryptionResetPasswordScreenViewModel.swift */; };
 		D63974A88CF2BC721F109C77 /* Compound in Frameworks */ = {isa = PBXBuildFile; productRef = DCA3C4A997AD28E6918D4CE5 /* Compound */; };
 		D69CCEC785E6C819551B402F /* SearchScreenViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5413213B56FB76C1071E2BFB /* SearchScreenViewModelTests.swift */; };
+		D6B31DD0EE72B7A811BB6713 /* CIVCOMDisabledCallService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46CC49B9E2CCC31695AAB13 /* CIVCOMDisabledCallService.swift */; };
 		D6DE764B17FB4A9A12C33BF4 /* MessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1DF3FFFE5ED2B8133F43A7 /* MessageComposer.swift */; };
 		D75C591C44C2510FDFA9C3D8 /* Macros in Frameworks */ = {isa = PBXBuildFile; productRef = AF574A0FC6F3A83D3BFFC9B3 /* Macros */; };
 		D7A26828D8715A17A1D52E66 /* AppSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11D53EE8E666C25F97B4369 /* AppSettingsTests.swift */; };
@@ -1753,6 +1760,7 @@
 		00245D40CD90FD71D6A05239 /* EmojiPickerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPickerScreen.swift; sourceTree = "<group>"; };
 		002DE5E9625122F37DE5F020 /* OAuthConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthConfiguration.swift; sourceTree = "<group>"; };
 		007C16779FDCF10DA4F1A510 /* LinkNewDeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNewDeviceService.swift; sourceTree = "<group>"; };
+		00816AB043749F59D9824602 /* CIVCOMDisabledLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIVCOMDisabledLocationManager.swift; sourceTree = "<group>"; };
 		008D864B3F51B41DF483B860 /* RoomThreadListScreenViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomThreadListScreenViewModelProtocol.swift; sourceTree = "<group>"; };
 		00AFC5F08734C2EA4EE79C59 /* IdentityConfirmationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityConfirmationScreen.swift; sourceTree = "<group>"; };
 		00E5B2CBEF8F96424F095508 /* RoomDetailsEditScreenViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomDetailsEditScreenViewModelTests.swift; sourceTree = "<group>"; };
@@ -1887,6 +1895,7 @@
 		1434D5169F0EE319E226DA7F /* RoomMembershipDetailsProxyProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomMembershipDetailsProxyProtocol.swift; sourceTree = "<group>"; };
 		14517E5597594956FCE1950D /* RoomInfoProxyProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoProxyProtocol.swift; sourceTree = "<group>"; };
 		1454CF3AABD242F55C8A2615 /* InviteUsersScreenModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteUsersScreenModels.swift; sourceTree = "<group>"; };
+		14999EDD953D56D0A1585CCA /* CIVCOMDisabledAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIVCOMDisabledAnalyticsClient.swift; sourceTree = "<group>"; };
 		1511B1DCECC0DC75EB267328 /* KnockRequestsListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnockRequestsListScreen.swift; sourceTree = "<group>"; };
 		154664B1B0D71846FBAC6E61 /* ChatsSpaceFiltersScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsSpaceFiltersScreen.swift; sourceTree = "<group>"; };
 		1562EAF6231151A675BED7A9 /* RoomDirectorySearchScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomDirectorySearchScreenCoordinator.swift; sourceTree = "<group>"; };
@@ -2225,6 +2234,7 @@
 		4BD371B60E07A5324B9507EF /* AnalyticsSettingsScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsSettingsScreenCoordinator.swift; sourceTree = "<group>"; };
 		4C816902BB6F450B4225B90C /* SettingsScreenUserStatusRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreenUserStatusRow.swift; sourceTree = "<group>"; };
 		4C8D988E82A8DFA13BE46F7C /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = pl; path = pl.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		4CBC7467F6FD822F32255483 /* CIVCOMPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIVCOMPolicy.swift; sourceTree = "<group>"; };
 		4CD6AC7546E8D7E5C73CEA48 /* ElementX.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ElementX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CDDDDD9FE1A699D23A5E096 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		4CF17EFB2833B4CE5C06E7F8 /* LabsScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabsScreenCoordinator.swift; sourceTree = "<group>"; };
@@ -2387,6 +2397,7 @@
 		69A05E85E4872C3221C5C287 /* RemotePreference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePreference.swift; sourceTree = "<group>"; };
 		69CB8242D69B7E4D0B32E18D /* AggregatedReactionMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatedReactionMock.swift; sourceTree = "<group>"; };
 		69D42EE0102D2857933625DD /* CreateRoomViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRoomViewModelTests.swift; sourceTree = "<group>"; };
+		6A036D6454EDDC7CD36A07CE /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Untranslated.strings; sourceTree = "<group>"; };
 		6A580295A56B55A856CC4084 /* InfoPlistReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPlistReader.swift; sourceTree = "<group>"; };
 		6A5C217DD0749EC709EED028 /* KnockRequestsListScreenViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnockRequestsListScreenViewModelProtocol.swift; sourceTree = "<group>"; };
 		6A8E19C4645D3F5F9FB02355 /* UnitTestsAppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitTestsAppCoordinator.swift; sourceTree = "<group>"; };
@@ -3207,6 +3218,7 @@
 		F229480685F30BCB96C439EC /* AdvancedSettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSettingsScreen.swift; sourceTree = "<group>"; };
 		F276F31C1AEC19E52B951B62 /* SendInviteConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendInviteConfirmationView.swift; sourceTree = "<group>"; };
 		F288457CD4C821DF48C1B6EE /* NativeCallRoomContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeCallRoomContext.swift; sourceTree = "<group>"; };
+		F298CCC204E170F711B20B0D /* CIVCOMPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIVCOMPolicyTests.swift; sourceTree = "<group>"; };
 		F2B94F1B0B5D9D42B15AA6E8 /* ChatsTabFlowCoordinatorStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsTabFlowCoordinatorStateMachine.swift; sourceTree = "<group>"; };
 		F2DC502B1A566E99969D34DD /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F2E4EF80DFB8FE7C4469B15D /* RoomDirectorySearchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomDirectorySearchScreen.swift; sourceTree = "<group>"; };
@@ -3225,6 +3237,7 @@
 		F409D44C2E6BE50462E82F8A /* en-US */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-US"; path = "en-US.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F4469F6AE311BDC439B3A5EC /* UserSessionMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionMock.swift; sourceTree = "<group>"; };
 		F4548A9BDE5CB3AB864BCA9F /* EffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsView.swift; sourceTree = "<group>"; };
+		F46CC49B9E2CCC31695AAB13 /* CIVCOMDisabledCallService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIVCOMDisabledCallService.swift; sourceTree = "<group>"; };
 		F46E441BA50705E6CEC89FE0 /* RoomSummaryProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomSummaryProviderTests.swift; sourceTree = "<group>"; };
 		F48A2FA6814F824ABB4C07F3 /* RoomCallControlsToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomCallControlsToolbar.swift; sourceTree = "<group>"; };
 		F4CEB4590CCF70F0E3C0B171 /* GeneratedAccessibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedAccessibilityTests.swift; sourceTree = "<group>"; };
@@ -4683,6 +4696,7 @@
 				E3B97591B2D3D4D67553506D /* AnalyticsClientProtocol.swift */,
 				5445FCE0CE15E634FDC1A2E2 /* AnalyticsService.swift */,
 				558AA5B376CE8C3982A9557F /* AnalyticsServiceProtocol.swift */,
+				14999EDD953D56D0A1585CCA /* CIVCOMDisabledAnalyticsClient.swift */,
 				A6B891A6DA826E2461DBB40F /* PHGPostHogConfiguration.swift */,
 				5CEEAE1BFAACD6C96B6DB731 /* PHGPostHogProtocol.swift */,
 				1715E3D7F53C0748AA50C91C /* PostHogAnalyticsClient.swift */,
@@ -5239,6 +5253,7 @@
 				7EECE8B331CD169790EF284F /* BugReportScreenViewModelTests.swift */,
 				EFFD3200F9960D4996159F10 /* BugReportServiceTests.swift */,
 				0328F54E0C3AAEDDF3E05D9D /* ChatsTabFlowCoordinatorTests.swift */,
+				F298CCC204E170F711B20B0D /* CIVCOMPolicyTests.swift */,
 				80935ADC7ED867226225F965 /* ClassicAppAccountManagerTests.swift */,
 				4AC3F28DECDF8665E8EBC76E /* ClassicAppMediaLoaderTests.swift */,
 				D5EA0312A6262484AA393AC9 /* CompletionSuggestionServiceTests.swift */,
@@ -5889,6 +5904,7 @@
 		90FD376E9373246E4925CE95 /* Location */ = {
 			isa = PBXGroup;
 			children = (
+				00816AB043749F59D9824602 /* CIVCOMDisabledLocationManager.swift */,
 				DA46D6DD4B4AB17E1D45092E /* CLLocationManagerProtocol.swift */,
 				D17F49E39CC38DAB7B305701 /* LiveLocationManager.swift */,
 				33752AE856E93CE62412B7A1 /* LiveLocationManagerProtocol.swift */,
@@ -5902,6 +5918,7 @@
 		92E99C57D7F92ED16F73282C /* ElementCall */ = {
 			isa = PBXGroup;
 			children = (
+				F46CC49B9E2CCC31695AAB13 /* CIVCOMDisabledCallService.swift */,
 				E6943C2B0925AB90ECAFE59F /* CXCallControllerProtocol.swift */,
 				5E68CA59F66CE43B66D129E9 /* CXProviderProtocol.swift */,
 				CC437C491EA6996513B1CEAB /* ElementCallConfiguration.swift */,
@@ -6886,6 +6903,7 @@
 				0FD22AEFFA20065494ED2333 /* AppAppearance.swift */,
 				7BD5523BDEDB247E29228476 /* AppSettings.swift */,
 				F78B4E56DBFFD4A7A39D10F5 /* AudioPlaybackSpeed.swift */,
+				4CBC7467F6FD822F32255483 /* CIVCOMPolicy.swift */,
 				0A2074C0449B83D5858BD2D7 /* FrequentlyUsedEmoji.swift */,
 				DA2FEFA393FC7D2870263012 /* LiveLocationSession.swift */,
 				8A1F2AAA3F0F2B72D2FFE4D0 /* MapTilerConfiguration.swift */,
@@ -7810,43 +7828,43 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1620;
-				ORGANIZATIONNAME = Element;
+				ORGANIZATIONNAME = "KG PSP";
 				TargetAttributes = {
 					0E28CD62691FDBC63147D5E3 = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = L643PDVV68;
 						TestTargetID = C0FAEB81CFD9776CD78CE489;
 					};
 					19F0C845D67E9BEA4BE7133E = {
 						DevelopmentTeam = "$(DEVELOPMENT_TEAM)";
 					};
 					32C23C8D224D46EFE62AFAD0 = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = L643PDVV68;
 					};
 					392E7AA23D7BA2CEEB25CF73 = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = L643PDVV68;
 					};
 					676A87694F0F247B2AF1A142 = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = L643PDVV68;
 					};
 					7A17BE29BAC81ADBAC6349D9 = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = L643PDVV68;
 					};
 					96435A765678A64A956EE59C = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = L643PDVV68;
 					};
 					C0C687DE1D270F9895FEE186 = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = L643PDVV68;
 						TestTargetID = C0FAEB81CFD9776CD78CE489;
 					};
 					C0FAEB81CFD9776CD78CE489 = {
 						DevelopmentTeam = "$(DEVELOPMENT_TEAM)";
 					};
 					D3DB351B7FBE0F49649171FC = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = L643PDVV68;
 						TestTargetID = C0FAEB81CFD9776CD78CE489;
 					};
 					F8E276FD6DC43EADB85241BC = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = L643PDVV68;
 					};
 					FEB53A5BC378C913769656D8 = {
 						DevelopmentTeam = "$(DEVELOPMENT_TEAM)";
@@ -8238,6 +8256,7 @@
 				F255083E18CDBFDF7E640FB1 /* Avatars.swift in Sources */,
 				A8E324E700E596E36B0A311B /* BootDetectionManager.swift in Sources */,
 				9A3B0CDF097E3838FB1B9595 /* Bundle.swift in Sources */,
+				4958A65B1B3D08EE71EE8499 /* CIVCOMPolicy.swift in Sources */,
 				9295F1F5E04484E10780BCE8 /* CharacterSet.swift in Sources */,
 				DA6E57CB533213D438001A31 /* ClientFactory.swift in Sources */,
 				9AF73FA23C86B45801EE2949 /* ClientFactoryHook.swift in Sources */,
@@ -8342,6 +8361,7 @@
 				CEAEA57B7665C8E790599A78 /* BlockedUsersScreenViewModelTests.swift in Sources */,
 				1B2F9F368619FFF8C63C87CC /* BugReportScreenViewModelTests.swift in Sources */,
 				7F61F9ACD5EC9E845EF3EFBF /* BugReportServiceTests.swift in Sources */,
+				18DDD8334CF426106030C047 /* CIVCOMPolicyTests.swift in Sources */,
 				4BD5AB54A6982CF19F5CC7C4 /* ChatsTabFlowCoordinatorTests.swift in Sources */,
 				1F1BCEE81056FD9F344F3B0E /* ClassicAppAccountManagerTests.swift in Sources */,
 				1866A34DBAD0F730058CB3C3 /* ClassicAppMediaLoaderTests.swift in Sources */,
@@ -8523,6 +8543,7 @@
 				2CC3F27CD76DB00A747BEA6C /* AppSettings.swift in Sources */,
 				56C18ACF91DD20463B242460 /* AudioPlaybackSpeed.swift in Sources */,
 				2F2906AE9BC3D0E79A6F98F8 /* Bundle.swift in Sources */,
+				B1FFA5BB7DE024144D845D4D /* CIVCOMPolicy.swift in Sources */,
 				8389254EEC28EBA5EA842410 /* ClientFactoryHook.swift in Sources */,
 				D104B27C5DA0626B41CE78D3 /* CurrentValuePublisher.swift in Sources */,
 				66ED2E6F19B0C669EC71D4CA /* Dictionary.swift in Sources */,
@@ -8718,6 +8739,10 @@
 				9A8E6FCD86B89970EC72EFD8 /* BugReportServiceMock.swift in Sources */,
 				172E6E9A612ADCF10A62CF13 /* BugReportServiceProtocol.swift in Sources */,
 				E1DF24D085572A55C9758A2D /* Bundle.swift in Sources */,
+				B2D198DF90C8D33FC8BCCB68 /* CIVCOMDisabledAnalyticsClient.swift in Sources */,
+				D6B31DD0EE72B7A811BB6713 /* CIVCOMDisabledCallService.swift in Sources */,
+				8C13C19304C56F84EF41E8BB /* CIVCOMDisabledLocationManager.swift in Sources */,
+				B79C722D2474D7CBEEE821FD /* CIVCOMPolicy.swift in Sources */,
 				783FFA8F0DB76A1CB23B0ECE /* CLLocationCoordinate2D.swift in Sources */,
 				6A5FDF9306CBD62C7EDDB552 /* CLLocationManagerMock.swift in Sources */,
 				1D2D713A5A269072D103AE37 /* CLLocationManagerProtocol.swift in Sources */,
@@ -10004,6 +10029,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				AA19C32BD97F45847724E09A /* en */,
+				6A036D6454EDDC7CD36A07CE /* pl */,
 			);
 			name = Untranslated.strings;
 			sourceTree = "<group>";
@@ -10150,7 +10176,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_VERSION = 6.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ElementX.app/ElementX";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/$(APP_NAME).app/$(APP_NAME)";
 			};
 			name = Debug;
 		};
@@ -10198,6 +10224,7 @@
 				);
 				PILLS_UT_TYPE_IDENTIFIER = "$(BASE_BUNDLE_IDENTIFIER).pills";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BASE_BUNDLE_IDENTIFIER)";
+				PRODUCT_MODULE_NAME = ElementX;
 				PRODUCT_NAME = "$(APP_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -10233,6 +10260,7 @@
 				);
 				PILLS_UT_TYPE_IDENTIFIER = "$(BASE_BUNDLE_IDENTIFIER).pills";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(BASE_BUNDLE_IDENTIFIER)";
+				PRODUCT_MODULE_NAME = ElementX;
 				PRODUCT_NAME = "$(APP_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -10288,7 +10316,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_VERSION = 6.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ElementX.app/ElementX";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/$(APP_NAME).app/$(APP_NAME)";
 			};
 			name = Debug;
 		};
@@ -10319,12 +10347,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_DISPLAY_NAME = "Element X";
-				APP_GROUP_IDENTIFIER = group.io.element;
-				APP_NAME = ElementX;
+				APNS_ENVIRONMENT = production;
+				APP_DISPLAY_NAME = CIVCOM;
+				APP_GROUP_IDENTIFIER = group.pl.gov.psp.civcom;
+				APP_NAME = CIVCOM;
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "colors/accent-color";
-				BASE_BUNDLE_IDENTIFIER = io.element.elementx;
+				BASE_BUNDLE_IDENTIFIER = pl.gov.psp.civcom;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -10355,14 +10384,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CLASSIC_APP_DEEP_LINK_URL = "element://open";
-				CLASSIC_APP_GROUP_IDENTIFIER = group.im.vector;
-				CLASSIC_APP_KEYCHAIN_ACCESS_GROUP_IDENTIFIER = "$(DEVELOPMENT_TEAM).im.vector.app.keychain.shared";
-				CLASSIC_APP_KEYCHAIN_SERVICE_IDENTIFIER = "im.vector.app.encryption-manager-service";
+				CLASSIC_APP_DEEP_LINK_URL = "";
+				CLASSIC_APP_GROUP_IDENTIFIER = "";
+				CLASSIC_APP_KEYCHAIN_ACCESS_GROUP_IDENTIFIER = "";
+				CLASSIC_APP_KEYCHAIN_SERVICE_IDENTIFIER = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7J4U792NQT;
+				DEVELOPMENT_TEAM = L643PDVV68;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -10376,12 +10405,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				IS_NIGHTLY_BUILD = NO;
-				KEYCHAIN_ACCESS_GROUP_IDENTIFIER = "$(DEVELOPMENT_TEAM).$(BASE_BUNDLE_IDENTIFIER)";
+				KEYCHAIN_ACCESS_GROUP_IDENTIFIER = "$(AppIdentifierPrefix)$(BASE_BUNDLE_IDENTIFIER)";
 				MACOSX_DEPLOYMENT_TARGET = 14.5;
-				MARKETING_VERSION = 26.09.2;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCTION_APP_NAME = Element;
+				PRODUCTION_APP_NAME = CIVCOM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -10395,12 +10424,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_DISPLAY_NAME = "Element X";
-				APP_GROUP_IDENTIFIER = group.io.element;
-				APP_NAME = ElementX;
+				APNS_ENVIRONMENT = development;
+				APP_DISPLAY_NAME = CIVCOM;
+				APP_GROUP_IDENTIFIER = group.pl.gov.psp.civcom.dev;
+				APP_NAME = CIVCOM;
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "colors/accent-color";
-				BASE_BUNDLE_IDENTIFIER = io.element.elementx;
+				BASE_BUNDLE_IDENTIFIER = pl.gov.psp.civcom.dev;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -10431,14 +10461,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CLASSIC_APP_DEEP_LINK_URL = "element://open";
-				CLASSIC_APP_GROUP_IDENTIFIER = group.im.vector;
-				CLASSIC_APP_KEYCHAIN_ACCESS_GROUP_IDENTIFIER = "$(DEVELOPMENT_TEAM).im.vector.app.keychain.shared";
-				CLASSIC_APP_KEYCHAIN_SERVICE_IDENTIFIER = "im.vector.app.encryption-manager-service";
+				CLASSIC_APP_DEEP_LINK_URL = "";
+				CLASSIC_APP_GROUP_IDENTIFIER = "";
+				CLASSIC_APP_KEYCHAIN_ACCESS_GROUP_IDENTIFIER = "";
+				CLASSIC_APP_KEYCHAIN_SERVICE_IDENTIFIER = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 7J4U792NQT;
+				DEVELOPMENT_TEAM = L643PDVV68;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -10458,13 +10488,13 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				IS_NIGHTLY_BUILD = NO;
-				KEYCHAIN_ACCESS_GROUP_IDENTIFIER = "$(DEVELOPMENT_TEAM).$(BASE_BUNDLE_IDENTIFIER)";
+				KEYCHAIN_ACCESS_GROUP_IDENTIFIER = "$(AppIdentifierPrefix)$(BASE_BUNDLE_IDENTIFIER)";
 				MACOSX_DEPLOYMENT_TARGET = 14.5;
-				MARKETING_VERSION = 26.09.2;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCTION_APP_NAME = Element;
+				PRODUCTION_APP_NAME = CIVCOM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -10492,7 +10522,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_VERSION = 6.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ElementX.app/ElementX";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/$(APP_NAME).app/$(APP_NAME)";
 			};
 			name = Release;
 		};
@@ -10708,7 +10738,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_VERSION = 6.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ElementX.app/ElementX";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/$(APP_NAME).app/$(APP_NAME)";
 			};
 			name = Release;
 		};

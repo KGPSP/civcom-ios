@@ -144,25 +144,25 @@ final nonisolated class AppSettings: @unchecked Sendable {
     ///
     /// Account provider is the friendly term for the server name. It should not contain an `https` prefix and should
     /// match the last part of the user ID. For example `example.com` and not `https://matrix.example.com`.
-    private(set) var accountProviders: [AccountProvider] = [.managed(serverName: "matrix.org", baseURL: "https://matrix-client.matrix.org")]
+    private(set) var accountProviders: [AccountProvider] = [.managed(serverName: "soia.info", baseURL: "https://matrix.soia.info")]
     /// Whether or not the user is allowed to manually enter their own account provider or must select from one of `defaultAccountProviders`.
-    private(set) var allowOtherAccountProviders = true
+    private(set) var allowOtherAccountProviders = false
     /// Whether the components surrounding the app brand/logo should be hidden or not
     private(set) var hideBrandChrome = false
     
     /// The task identifier used for background app refresh. Also used in main target's the Info.plist
-    let backgroundAppRefreshTaskIdentifier = "io.element.elementx.background.refresh"
+    let backgroundAppRefreshTaskIdentifier = InfoPlistReader.main.baseBundleIdentifier + ".background.refresh"
     
     /// A URL where users can go read more about the app.
-    private(set) var websiteURL: URL = "https://element.io"
+    private(set) var websiteURL: URL = "https://civcom.soia.info"
     /// A URL that contains the app's logo that may be used when showing content in a web view.
-    private(set) var logoURL: URL = "https://element.io/mobile-icon.png"
+    private(set) var logoURL: URL = "https://civcom.soia.info/znak.svg"
     /// A URL that contains that app's copyright notice.
-    private(set) var copyrightURL: URL = "https://element.io/copyright"
+    private(set) var copyrightURL: URL = "https://github.com/KGPSP/civcom-ios/blob/main/LICENSE"
     /// A URL that contains the app's Terms of use.
-    private(set) var acceptableUseURL: URL = "https://element.io/acceptable-use-policy-terms"
+    private(set) var acceptableUseURL: URL = "https://civcom.soia.info/terms"
     /// A URL that contains the app's Privacy Policy.
-    private(set) var privacyURL: URL = "https://element.io/privacy"
+    private(set) var privacyURL: URL = "https://civcom.soia.info/privacy"
     /// A URL where users can go read more about encryption in general.
     private(set) var encryptionURL: URL = "https://element.io/help#encryption"
     /// A URL where users can go read more about device verification..
@@ -175,9 +175,9 @@ final nonisolated class AppSettings: @unchecked Sendable {
     private(set) var historySharingDetailsURL: URL = "https://element.io/en/help#e2ee-history-sharing"
     
     /// Any domains that Element web may be hosted on - used for handling links.
-    private(set) var elementWebHosts = ["app.element.io", "staging.element.io", "develop.element.io"]
+    private(set) var elementWebHosts = ["civcom.soia.info"]
     /// The domain that account provisioning links will be hosted on - used for handling the links.
-    private(set) var accountProvisioningHost = "mobile.element.io"
+    private(set) var accountProvisioningHost = "civcom.soia.info"
     /// The App Store URL for Element Pro, shown to the user when a homeserver requires that app.
     /// **Note:** This property isn't overridable as it in unexpected for forks to come across the error (or to even have a "Pro" app).
     let elementProAppStoreURL: URL = "https://apps.apple.com/app/element-pro-for-work/id6502951615"
@@ -212,10 +212,10 @@ final nonisolated class AppSettings: @unchecked Sendable {
     // MARK: - Authentication
     
     /// Any pre-defined static client registrations for OAuth issuers.
-    let oAuthStaticRegistrations: [URL: String] = ["https://id.thirdroom.io/realms/thirdroom": "elementx"]
+    let oAuthStaticRegistrations: [URL: String] = [:]
     /// The redirect URL used for OAuth. For the normal case we don't actually need the bundle ID as the web authentication session handles the redirect internally.
     /// However in the case where MAS sends the user to an external app, we need to make sure that the system will open the correct variant of the app (e.g. Nightly).
-    private(set) nonisolated(unsafe) var oAuthRedirectURL: URL! = URL(string: "https://element.io/oauth/ios/\(InfoPlistReader.main.bundleIdentifier)")
+    private(set) nonisolated(unsafe) var oAuthRedirectURL: URL! = URL(string: "https://civcom.soia.info/oauth/ios/\(InfoPlistReader.main.bundleIdentifier)")
     /// A path that is appended to `websiteURL` to form the OAuth `clientURI`. MAS uses `clientURI` as the identifier for a specific app, allowing us to
     /// distinguish the various clients we have for Android, iOS and Web from each other.
     /// Intentionally a distinct property so it can be easily overridden without having to manipulate the website URL.
@@ -234,7 +234,7 @@ final nonisolated class AppSettings: @unchecked Sendable {
     /// Whether or not the Create Account button is shown on the start screen.
     ///
     /// **Note:** Setting this to false doesn't prevent someone from creating an account when the selected homeserver's MAS allows registration.
-    let showCreateAccountButton = true
+    let showCreateAccountButton = false
     
     // MARK: - Notifications
     
@@ -246,7 +246,7 @@ final nonisolated class AppSettings: @unchecked Sendable {
         #endif
     }
     
-    private(set) var pushGatewayBaseURL: URL = "https://matrix.org"
+    private(set) var pushGatewayBaseURL: URL = "https://push.soia.info"
     var pushGatewayNotifyEndpoint: URL {
         pushGatewayBaseURL.appending(path: "_matrix/push/v1/notify")
     }
@@ -286,9 +286,9 @@ final nonisolated class AppSettings: @unchecked Sendable {
     
     // MARK: - Bug report
     
-    let bugReportRageshakeURL: RemotePreference<RageshakeConfiguration> = .init(Secrets.rageshakeURL.map { .url(URL(string: $0)!) } ?? .disabled) // swiftlint:disable:this force_unwrapping
-    let bugReportSentryURL: URL? = Secrets.sentryDSN.map { URL(string: $0)! } // swiftlint:disable:this force_unwrapping
-    let bugReportSentryRustURL: URL? = Secrets.sentryRustDSN.map { URL(string: $0)! } // swiftlint:disable:this force_unwrapping
+    let bugReportRageshakeURL: RemotePreference<RageshakeConfiguration> = .init(.disabled)
+    let bugReportSentryURL: URL? = nil
+    let bugReportSentryRustURL: URL? = nil
     /// The name allocated by the bug report server
     private(set) var bugReportApplicationID = "element-x-ios"
     
@@ -307,17 +307,12 @@ final nonisolated class AppSettings: @unchecked Sendable {
     // MARK: - Analytics
     
     /// The configuration to use for analytics. Set to `nil` to disable analytics.
-    let analyticsConfiguration: AnalyticsConfiguration? = AppSettings.makeAnalyticsConfiguration()
+    let analyticsConfiguration: AnalyticsConfiguration? = nil
     /// The URL to open with more information about analytics terms. When this is `nil` the "Learn more" link will be hidden.
     private(set) var analyticsTermsURL: URL? = "https://element.io/cookie-policy"
     /// Whether or not there the app is able ask for user consent to enable analytics or sentry reporting.
     var canPromptForAnalytics: Bool {
         analyticsConfiguration != nil || bugReportSentryURL != nil
-    }
-    
-    private static func makeAnalyticsConfiguration() -> AnalyticsConfiguration? {
-        guard let host = Secrets.postHogHost, let apiKey = Secrets.postHogAPIKey else { return nil }
-        return AnalyticsConfiguration(host: host, apiKey: apiKey)
     }
     
     /// Whether the user has opted in to send analytics.
@@ -406,7 +401,7 @@ final nonisolated class AppSettings: @unchecked Sendable {
     
     /// The locally-bundled MapTiler configuration.
     static let bundledMapTilerConfiguration = MapTilerConfiguration(baseURL: "https://api.maptiler.com/maps",
-                                                                    apiKey: Secrets.mapLibreAPIKey,
+                                                                    apiKey: nil,
                                                                     lightStyleID: "9bc819c8-e627-474a-a348-ec144fe3d810",
                                                                     darkStyleID: "dea61faf-292b-4774-9660-58fcef89a7f3")
     
@@ -469,7 +464,7 @@ final nonisolated class AppSettings: @unchecked Sendable {
     @UserPreference(key: "clientPausingAndResumingEnabledV2", defaultValue: false, volatile: true)
     var clientPausingAndResumingEnabled: Bool
     
-    @UserPreference(defaultValue: AppBuildType.current != .release)
+    @UserPreference(defaultValue: false)
     var developerOptionsEnabled: Bool
     
     /// Runs calls through the native matrix-rust-rtc stack instead of the Element Call web view.

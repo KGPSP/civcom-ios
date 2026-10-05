@@ -1173,6 +1173,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
     private func presentMapNavigator(interactionMode: LocationSharingInteractionMode,
                                      timelineController: TimelineControllerProtocol,
                                      animated: Bool) {
+        guard CIVCOMPolicy.mapsEnabled else { return }
         let stackCoordinator = NavigationStackCoordinator()
         
         let params = LocationSharingScreenCoordinatorParameters(interactionMode: interactionMode,

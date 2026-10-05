@@ -10,6 +10,12 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal nonisolated enum UntranslatedL10n {
+  /// Sign in
+  internal static var screenCivcomSignInIos: String { return UntranslatedL10n.tr("Untranslated", "screen_civcom_sign_in_ios") }
+  /// Secure communication for KG PSP. Sign in with an account provided by your administrator.
+  internal static var screenCivcomWelcomeMessageIos: String { return UntranslatedL10n.tr("Untranslated", "screen_civcom_welcome_message_ios") }
+  /// CIVCOM
+  internal static var screenCivcomWelcomeTitleIos: String { return UntranslatedL10n.tr("Untranslated", "screen_civcom_welcome_title_ios") }
   /// Search
   internal static var screenHomeTabSearch: String { return UntranslatedL10n.tr("Untranslated", "screen_home_tab_search") }
   /// Search for chats and messages
@@ -61,10 +67,13 @@ internal nonisolated enum UntranslatedL10n {
 
 nonisolated extension UntranslatedL10n {
   static func tr(_ table: String, _ key: String, _ args: CVarArg...) -> String {
-    // No need to check languages, we always default to en for untranslated strings
-    guard let bundle = Bundle.lprojBundle(for: "en") else { return key }
-    let format = NSLocalizedString(key, tableName: table, bundle: bundle, comment: "")
-    return String(format: format, locale: Locale(identifier: "en"), arguments: args)
+    for language in ["pl", "en"] {
+      guard let bundle = Bundle.lprojBundle(for: language) else { continue }
+      let format = NSLocalizedString(key, tableName: table, bundle: bundle, comment: "")
+      guard format != key else { continue }
+      return String(format: format, locale: Locale(identifier: language), arguments: args)
+    }
+    return key
   }
 }
 

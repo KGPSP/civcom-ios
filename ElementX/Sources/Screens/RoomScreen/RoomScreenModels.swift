@@ -56,7 +56,7 @@ struct RoomScreenViewState: BindableState {
     var canSendMessage = true
     
     /// Whether or not starting a call is supported.
-    var isCallingEnabled = true
+    var isCallingEnabled = CIVCOMPolicy.callsEnabled
     /// Whether or not the user is allowed to join calls in this room.
     var canJoinCall = false
     /// Whether or not this room currently has a call in progress.

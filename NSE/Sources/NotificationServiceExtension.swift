@@ -43,7 +43,17 @@ final nonisolated class NotificationServiceExtension: UNNotificationServiceExten
     /// this error, and then we handle all the concurrency logic inside the actor that the NSE delegates all the logic to.
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping @Sendable (UNNotificationContent) -> Void) {
         let actor = actor
-        Task { await actor.handle(request, withContentHandler: contentHandler) }
+        Task {
+            await actor.handle(request) { content in
+                guard !content.title.isEmpty || !content.body.isEmpty,
+                      let generic = content.mutableCopy() as? UNMutableNotificationContent else {
+                    contentHandler(content)
+                    return
+                }
+                CIVCOMPolicy.redact(generic)
+                contentHandler(generic)
+            }
+        }
     }
     
     override func serviceExtensionTimeWillExpire() {
@@ -171,7 +181,7 @@ actor NotificationServiceExtensionActor {
         
         ExtensionLogger.logMemory(with: tag)
         
-        MXLog.info("\(tag) Received payload: \(request.content.userInfo)")
+        MXLog.info("\(tag) Received notification")
         
         do {
             let userSession = try await NSEUserSession(credentials: credentials,
@@ -257,7 +267,7 @@ actor NotificationServiceExtensionActor {
         print("Delivering the 'received while offline' notification.")
         
         let content = UNMutableNotificationContent()
-        content.body = L10n.notificationReceivedWhileOfflineIos
+        CIVCOMPolicy.redact(content)
         if !settings.roomListNotificationCountEnabled {
             content.badge = originalRequest.content.unreadCount as NSNumber?
         }

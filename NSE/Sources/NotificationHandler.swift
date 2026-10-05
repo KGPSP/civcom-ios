@@ -90,6 +90,7 @@ nonisolated class NotificationHandler {
         } else {
             MXLog.info("\(tag) Delivering notification")
         }
+        CIVCOMPolicy.redact(notificationContent)
         contentHandler(notificationContent)
     }
     
@@ -210,6 +211,7 @@ nonisolated class NotificationHandler {
         // - the main app picks this up in `PKPushRegistry.didReceiveIncomingPushWith` and
         // `CXProvider.reportNewIncomingCall` to show the system UI and handle actions on it.
         // N.B. this flow works properly only when background processing capabilities are enabled
+        guard CIVCOMPolicy.callsEnabled else { return .unsupportedShouldDiscard }
         guard notificationType == .ring else {
             MXLog.info("Non-ringing call notification, handling as push notification")
             return .shouldDisplay

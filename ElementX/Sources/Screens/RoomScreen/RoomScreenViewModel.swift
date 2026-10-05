@@ -94,6 +94,7 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
         case .displayRoomDetails:
             actionsSubject.send(.displayRoomDetails)
         case .displayCall(let isVoiceCall):
+            guard CIVCOMPolicy.callsEnabled else { return }
             actionsSubject.send(.displayCall(isVoiceCall: isVoiceCall))
             actionsSubject.send(.removeComposerFocus)
             analyticsService.trackInteraction(name: .MobileRoomCallButton)
