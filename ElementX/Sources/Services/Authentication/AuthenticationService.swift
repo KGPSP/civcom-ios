@@ -20,6 +20,7 @@ class AuthenticationService: AuthenticationServiceProtocol {
     private let clientFactory: ClientFactoryProtocol
     private let appSettings: AppSettings
     private let appHooks: AppHooks
+    private let oauthMetadataProvider: any CIVCOMOAuthMetadataProvider
     
     private let homeserverSubject: CurrentValueSubject<LoginHomeserver, Never>
     /// The currently configured homeserver.
@@ -38,7 +39,8 @@ class AuthenticationService: AuthenticationServiceProtocol {
          classicAppManager: ClassicAppManagerProtocol?,
          clientFactory: ClientFactoryProtocol = ClientFactory(),
          appSettings: AppSettings,
-         appHooks: AppHooks) {
+         appHooks: AppHooks,
+         oauthMetadataProvider: any CIVCOMOAuthMetadataProvider = CIVCOMOwnedOAuthMetadataProvider()) {
         sessionDirectories = .init()
         passphrase = encryptionKeyProvider.generateKey().base64EncodedString()
         
@@ -47,6 +49,7 @@ class AuthenticationService: AuthenticationServiceProtocol {
         self.clientFactory = clientFactory
         self.appSettings = appSettings
         self.appHooks = appHooks
+        self.oauthMetadataProvider = oauthMetadataProvider
         
         do {
             if appSettings.hasSignedInBefore {
@@ -117,6 +120,10 @@ class AuthenticationService: AuthenticationServiceProtocol {
     
     func urlForOAuthLogin(loginHint: String?) async -> Result<OAuthAuthorizationDataProxy, AuthenticationServiceError> {
         guard let client else { return .failure(.oAuthError(.urlFailure)) }
+        do {
+            let issuer = try await oauthMetadataProvider.verifiedIssuer()
+            guard issuer == CIVCOMOAuthPolicy.issuer else { return .failure(.oAuthError(.urlFailure)) }
+        } catch { return .failure(.oAuthError(.urlFailure)) }
         do {
             // The create prompt is broken: https://github.com/element-hq/matrix-authentication-service/issues/3429
             // let prompt: OAuthPrompt = flow == .register ? .create : .consent
@@ -236,6 +243,8 @@ class AuthenticationService: AuthenticationServiceProtocol {
         
         Task {
             do {
+                let issuer = try await oauthMetadataProvider.verifiedIssuer()
+                guard issuer == CIVCOMOAuthPolicy.issuer else { throw CIVCOMOAuthPolicy.Failure.untrustedMetadata }
                 let client = try await makeClient(serverNameOrBaseURL: scannedServerNameOrBaseURL)
                 let qrCodeHandler = client.newLoginWithQrCodeHandler(oauthConfiguration: appSettings.oAuthConfiguration.rustValue)
                 try await qrCodeHandler.scan(qrCodeData: qrData, progressListener: listener)

@@ -58,8 +58,8 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                        clientSessionDelegate: ClientSessionDelegate,
                        appSettings: AppSettings,
                        appHooks: AppHooks) async throws -> ClientProtocol {
-        let homeserverURL = credentials.restorationToken.session.homeserverUrl
-        guard CIVCOMPolicy.allowsAccountProvider(homeserverURL) else { throw CIVCOMProviderError.notAllowed }
+        let session = try Self.normalizedRestorationSession(for: credentials)
+        let homeserverURL = session.homeserverUrl
         
         let builder = makeBaseBuilder(httpProxy: URL(string: homeserverURL)?.globalProxy,
                                       discoverSlidingSync: false,
@@ -75,7 +75,7 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                                   password: credentials.restorationToken.passphrase)
             .homeserverUrl(url: homeserverURL)
         
-        return try await build(builder, for: .restoration(credentials.restorationToken.session, .all), appHooks: appHooks)
+        return try await build(builder, for: .restoration(session, .all), appHooks: appHooks)
     }
     #endif
     
@@ -84,8 +84,8 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                        clientSessionDelegate: ClientSessionDelegate,
                        appSettings: CommonSettingsProtocol,
                        appHooks: AppHooks) async throws -> ClientProtocol {
-        let homeserverURL = credentials.restorationToken.session.homeserverUrl
-        guard CIVCOMPolicy.allowsAccountProvider(homeserverURL) else { throw CIVCOMProviderError.notAllowed }
+        let session = try Self.normalizedRestorationSession(for: credentials)
+        let homeserverURL = session.homeserverUrl
         
         let builder = makeBaseBuilder(setupEncryption: false,
                                       httpProxy: URL(string: homeserverURL)?.globalProxy,
@@ -102,7 +102,16 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                     .passphrase(passphrase: credentials.restorationToken.passphrase))
             .homeserverUrl(url: homeserverURL)
         
-        return try await build(builder, for: .restoration(credentials.restorationToken.session, .one(roomId: roomID)), appHooks: appHooks)
+        return try await build(builder, for: .restoration(session, .one(roomId: roomID)), appHooks: appHooks)
+    }
+    
+    static func normalizedRestorationSession(for credentials: KeychainCredentials) throws -> Session {
+        var session = credentials.restorationToken.session
+        let actualAPI = try CIVCOMPolicy.authenticationAPI(for: session.homeserverUrl).absoluteString
+        guard credentials.userID == session.userId,
+              CIVCOMPolicy.allowsStoredAccount(userID: session.userId, homeserverURL: actualAPI) else { throw CIVCOMProviderError.notAllowed }
+        session.homeserverUrl = actualAPI
+        return session
     }
     
     // MARK: - Helpers
