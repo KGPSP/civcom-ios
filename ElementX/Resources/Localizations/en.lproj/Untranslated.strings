@@ -18,3 +18,6 @@
 "screen_civcom_welcome_title_ios" = "CIVCOM";
 "screen_civcom_welcome_message_ios" = "Secure communication for KG PSP. Sign in with an account provided by your administrator.";
 "screen_civcom_sign_in_ios" = "Sign in";
+
+"screen_civcom_tagline_ios" = "CIVIL PROTECTION COMMUNICATION SYSTEM";
+"screen_civcom_service_footer_ios" = "OFFICIAL SYSTEM · KG PSP · CIVCOM.SOIA.INFO";

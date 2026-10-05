@@ -1,3 +1,6 @@
 "screen_civcom_welcome_title_ios" = "CIVCOM";
 "screen_civcom_welcome_message_ios" = "Bezpieczna komunikacja KG PSP. Zaloguj się kontem otrzymanym od administratora.";
 "screen_civcom_sign_in_ios" = "Zaloguj się";
+
+"screen_civcom_tagline_ios" = "SYSTEM ŁĄCZNOŚCI OCHRONY LUDNOŚCI";
+"screen_civcom_service_footer_ios" = "SYSTEM SŁUŻBOWY · KG PSP · CIVCOM.SOIA.INFO";
