@@ -117,6 +117,7 @@ final class NotificationManager: NSObject, NotificationManagerProtocol {
         if let subtitle {
             content.subtitle = subtitle
         }
+        CIVCOMPolicy.redact(content)
         let request = UNNotificationRequest(identifier: ProcessInfo.processInfo.globallyUniqueString,
                                             content: content,
                                             trigger: nil)
@@ -175,15 +176,17 @@ final class NotificationManager: NSObject, NotificationManagerProtocol {
     }
     
     private func removeReceivedWhileOfflineNotification() {
-        notificationCenter.removeDeliveredNotifications(withIdentifiers: [NotificationServiceExtensionActor.receivedWhileOfflineNotificationID])
+        notificationCenter.removeDeliveredNotifications(withIdentifiers: ["io.element.elementx.receivedWhileOfflineNotification"])
     }
     
     private func setPusher(with deviceToken: Data, clientProxy: ClientProxyProtocol) async -> Bool {
         do {
+            guard let clientID = clientProxy.pusherNotificationClientIdentifier,
+                  CIVCOMPolicy.isNotificationClientIdentifier(clientID) else { return false }
             let defaultPayload = APNSPayload(aps: APSInfo(mutableContent: 1,
                                                           alert: APSAlert(locKey: nil,
                                                                           locArgs: [])),
-                                             pusherNotificationClientIdentifier: clientProxy.pusherNotificationClientIdentifier)
+                                             pusherNotificationClientIdentifier: clientID)
             
             let configuration = try PusherConfiguration(identifiers: .init(pushkey: deviceToken.base64EncodedString(),
                                                                            appId: appSettings.pusherAppID),
