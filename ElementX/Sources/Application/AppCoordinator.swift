@@ -107,13 +107,11 @@ class AppCoordinator: AppCoordinatorProtocol, AuthenticationFlowCoordinatorDeleg
         
         appRouteURLParser = AppRouteURLParser(appSettings: appSettings)
         
-        let posthogAnalyticsClient = PostHogAnalyticsClient()
-        posthogAnalyticsClient.updateSuperProperties(AnalyticsEvent.SuperProperties(appPlatform: .EXI, cryptoSDK: .Rust, cryptoSDKVersion: sdkGitSha()))
-        analyticsService = AnalyticsService(client: posthogAnalyticsClient, appSettings: appSettings)
+        analyticsService = AnalyticsService(client: CIVCOMDisabledAnalyticsClient(), appSettings: appSettings)
         
         userIndicatorController = UserIndicatorController()
         
-        elementCallService = ElementCallService(appSettings: appSettings)
+        elementCallService = CIVCOMDisabledCallService()
         
         navigationRootCoordinator = NavigationRootCoordinator()
         

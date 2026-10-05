@@ -120,28 +120,6 @@ struct DeveloperOptionsScreen: View {
                 Text("This setting controls how end-to-end encryption (E2EE) keys are exchanged. Enabling it will prevent the inclusion of devices that have not been explicitly verified by their owners.")
             }
             
-            Section {
-                TextField("Leave empty to use EC locally", text: $elementCallURLOverrideString)
-                    .autocorrectionDisabled(true)
-                    .autocapitalization(.none)
-                    .foregroundColor(URL(string: elementCallURLOverrideString) == nil ? .red : .primary)
-                    .submitLabel(.done)
-                    .onSubmit {
-                        if elementCallURLOverrideString.isEmpty {
-                            context.elementCallBaseURLOverride = nil
-                        } else if let url = URL(string: elementCallURLOverrideString) {
-                            context.elementCallBaseURLOverride = url
-                        }
-                    }
-                Toggle(isOn: $context.nativeCallEnabled) {
-                    Text("Experimental native calls")
-                }
-            } header: {
-                Text("Calls")
-            } footer: {
-                Text("The URL override only applies to calls run in the Element Call web view, which native calls replace.")
-            }
-            
             Section("Notifications") {
                 Toggle(isOn: $context.hideQuietNotificationAlerts) {
                     Text("Hide quiet alerts")

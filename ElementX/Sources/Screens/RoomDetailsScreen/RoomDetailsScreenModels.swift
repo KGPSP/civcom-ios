@@ -62,7 +62,7 @@ struct RoomDetailsScreenViewState: BindableState {
     var canKickUsers = false
     var canBanUsers = false
     var notificationSettingsState: RoomDetailsNotificationSettingsState = .loading
-    var isCallingEnabled = true
+    var isCallingEnabled = CIVCOMPolicy.callsEnabled
     var canJoinCall = false
     var pinnedEventsActionState = RoomDetailsScreenPinnedEventsActionState.loading
     
