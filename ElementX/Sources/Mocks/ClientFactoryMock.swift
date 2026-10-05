@@ -13,6 +13,8 @@ import MatrixRustSDKMocks
 extension ClientFactoryMock {
     struct Configuration {
         var homeserverClients = [
+            "soia.info": ClientSDKMock(.init(serverName: "soia.info", homeserverURL: "https://matrix.soia.info", oAuthLoginURL: "https://auth.soia.info/authorize")),
+            "https://matrix.soia.info": ClientSDKMock(.init(serverName: "soia.info", homeserverURL: "https://matrix.soia.info", oAuthLoginURL: "https://auth.soia.info/authorize")),
             "matrix.org": ClientSDKMock(.init()),
             "https://matrix-client.matrix.org": ClientSDKMock(.init()),
             "example.com": ClientSDKMock(.init(serverName: "example.com",

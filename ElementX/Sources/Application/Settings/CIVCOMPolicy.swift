@@ -19,9 +19,30 @@ nonisolated enum CIVCOMPolicy {
         return isHTTPSOrigin(url, host: "matrix.soia.info") && ["", "/"].contains(url.path) && url.query == nil && url.fragment == nil
     }
     
+    static func isNotificationClientIdentifier(_ value: String) -> Bool {
+        value.count == 64 && value.allSatisfy { "0123456789abcdef".contains($0) }
+    }
+    
+    static func notificationCredentialIndex(for identifier: String?, available: [String?]) -> Int? {
+        guard let identifier, isNotificationClientIdentifier(identifier) else { return nil }
+        return available.firstIndex { $0 == identifier }
+    }
+    
+    static func allowsStoredAccount(userID: String, homeserverURL: String) -> Bool {
+        guard let url = URL(string: homeserverURL), isHTTPSOrigin(url, host: "matrix.soia.info"),
+              ["", "/"].contains(url.path), url.query == nil, url.fragment == nil else { return false }
+        return userID.range(of: "^@[a-z0-9._=/-]+:soia[.]info$", options: .regularExpression) != nil
+    }
+    
+    static func isRoomEventIdentifier(_ value: String, prefix: Character) -> Bool {
+        value.first == prefix && (2...255).contains(value.utf8.count) && !value.unicodeScalars.contains {
+            CharacterSet.whitespacesAndNewlines.contains($0) || CharacterSet.controlCharacters.contains($0)
+        }
+    }
+    
     static func authenticationAPI(for provider: String) throws -> URL {
         guard allowsAccountProvider(provider) else { throw CIVCOMProviderError.notAllowed }
-        return "https://matrix.soia.info"
+        return URL(string: "https://matrix.soia.info")!
     }
     
     static func isHTTPSOrigin(_ url: URL, host: String) -> Bool {

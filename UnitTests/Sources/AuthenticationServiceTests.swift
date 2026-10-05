@@ -6,8 +6,10 @@
 // Please see LICENSE files in the repository root for full details.
 //
 
+import Combine
 @testable import ElementX
 import Foundation
+import MatrixRustSDK
 import MatrixRustSDKMocks
 import Testing
 
@@ -23,7 +25,7 @@ struct AuthenticationServiceTests {
     mutating func passwordLogin() async throws {
         try await setup(serverNameOrBaseURL: "example.com")
         
-        switch await service.configure(for: "example.com", flow: .login) {
+        switch await service.configure(for: "soia.info", flow: .login) {
         case .success:
             break
         case .failure(let error):
@@ -31,7 +33,7 @@ struct AuthenticationServiceTests {
         }
         
         #expect(service.flow == .login)
-        #expect(service.homeserver.value == .mockBasicServer)
+        #expect(service.homeserver.value == .init(accountProvider: .generic("soia.info"), loginMode: .password))
         
         switch await service.login(username: "alice", password: "12345678", initialDeviceName: nil, deviceID: nil) {
         case .success:
@@ -48,20 +50,18 @@ struct AuthenticationServiceTests {
     mutating func configureLoginWithOAuth() async throws {
         try await setup()
         
-        try await service.configure(for: "matrix.org", flow: .login).get()
+        try await service.configure(for: "soia.info", flow: .login).get()
         
         #expect(service.flow == .login)
-        #expect(service.homeserver.value == .mockMatrixDotOrg)
+        #expect(service.homeserver.value == .init(accountProvider: .generic("soia.info"), loginMode: .oAuth(supportsCreatePrompt: true)))
     }
     
     @Test
     mutating func configureRegisterWithOAuth() async throws {
         try await setup()
-        
-        try await service.configure(for: "matrix.org", flow: .register).get()
-        
-        #expect(service.flow == .register)
-        #expect(service.homeserver.value == .mockMatrixDotOrg)
+        let result = await service.configure(for: "soia.info", flow: .register)
+        guard case .failure(.registrationNotSupported) = result else { Issue.record("Registration allowed"); return }
+        #expect(service.flow == .login)
     }
     
     @Test
@@ -74,7 +74,7 @@ struct AuthenticationServiceTests {
         }
         
         #expect(service.flow == .login)
-        #expect(service.homeserver.value == .init(accountProvider: .managed(serverName: "matrix.org", baseURL: "https://matrix-client.matrix.org"),
+        #expect(service.homeserver.value == .init(accountProvider: .managed(serverName: "soia.info", baseURL: "https://matrix.soia.info"),
                                                   loginMode: .unknown))
     }
     
@@ -82,7 +82,7 @@ struct AuthenticationServiceTests {
     mutating func classicAppAccountSecretsBundleIsUsed() async throws {
         // Given an authentication service with an Element Classic account for Alice.
         try await setup(classicAppAccounts: [.mockAlice])
-        try await service.configure(for: "matrix.org", flow: .login).get()
+        try await service.configure(for: "soia.info", flow: .login).get()
         #expect(service.flow == .login)
         #expect(service.classicAppAccount?.state.availableSecrets == .complete)
         
@@ -99,7 +99,7 @@ struct AuthenticationServiceTests {
         // Given an authentication service with an Element Classic account for Alice
         // which isn't configured with any available secrets.
         try await setup(classicAppAccounts: [.mockAlice], availableSecrets: .unavailable)
-        try await service.configure(for: "matrix.org", flow: .login).get()
+        try await service.configure(for: "soia.info", flow: .login).get()
         #expect(service.flow == .login)
         #expect(service.classicAppAccount?.state.availableSecrets == .unavailable)
         
@@ -115,7 +115,7 @@ struct AuthenticationServiceTests {
     mutating func classicAppAccountSecretsBundleIsIgnoredForDifferentUser() async throws {
         // Given an authentication service with an Element Classic account for Dan.
         try await setup(classicAppAccounts: [.mockDan])
-        try await service.configure(for: "matrix.org", flow: .login).get()
+        try await service.configure(for: "soia.info", flow: .login).get()
         #expect(service.flow == .login)
         #expect(service.classicAppAccount?.state.availableSecrets == .complete)
         
@@ -127,22 +127,84 @@ struct AuthenticationServiceTests {
         #expect(!encryption.importSecretsBundleSecretsBundleCalled)
     }
     
+    @Test mutating func foreignIssuerStopsOAuthBeforeSDKAuthorization() async throws {
+        try await setup(issuer: "https://evil.example/")
+        try await service.configure(for: "soia.info", flow: .login).get()
+        guard case .failure = await service.urlForOAuthLogin(loginHint: nil) else { Issue.record("Foreign issuer accepted"); return }
+        #expect(!client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesCalled)
+        #expect(!userSessionStore.userSessionForSessionDirectoriesPassphraseCalled)
+    }
+    
+    @Test mutating func ownedIssuerAllowsSDKAuthorization() async throws {
+        try await setup()
+        try await service.configure(for: "soia.info", flow: .login).get()
+        _ = try await service.urlForOAuthLogin(loginHint: nil).get()
+        #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesCallsCount == 1)
+    }
+    
+    @Test mutating func foreignIssuerStopsQRBeforeClientAndScan() async throws {
+        try await setup(issuer: "https://evil.example/")
+        let handler = LoginWithQrCodeHandlerSDKMock()
+        client.newLoginWithQrCodeHandlerOauthConfigurationReturnValue = handler
+        let publisher = service.loginWithQRCode(data: syntheticQR())
+        await #expect(throws: AuthenticationServiceError.self) {
+            for try await _ in publisher.values { }
+        }
+        #expect(!handler.scanQrCodeDataProgressListenerCalled)
+        #expect(!userSessionStore.userSessionForSessionDirectoriesPassphraseCalled)
+    }
+    
+    @Test mutating func ownedIssuerAllowsQRScanAndSession() async throws {
+        try await setup()
+        let handler = LoginWithQrCodeHandlerSDKMock()
+        client.newLoginWithQrCodeHandlerOauthConfigurationReturnValue = handler
+        var signedIn = false
+        for try await progress in service.loginWithQRCode(data: syntheticQR()).values {
+            if case .signedIn = progress {
+                signedIn = true; break
+            }
+        }
+        #expect(signedIn)
+        #expect(handler.scanQrCodeDataProgressListenerCallsCount == 1)
+        #expect(userSessionStore.userSessionForSessionDirectoriesPassphraseCalled)
+    }
+    
+    private func syntheticQR() -> Data {
+        // MSC4108 at pinned SDK85bad975: prefix/version/reciprocate/key/length-prefixed URLs and server name.
+        var data = Data("MATRIX".utf8) + Data([2, 4]) + Data(repeating: 1, count: 32)
+        for field in ["https://matrix.soia.info/_synapse/client/rendezvous/synthetic", "soia.info"] {
+            let value = Data(field.utf8)
+            data.append(contentsOf: [UInt8(value.count >> 8), UInt8(value.count & 255)])
+            data.append(value)
+        }
+        return data
+    }
+    
     // MARK: - Helpers
     
-    private mutating func setup(serverNameOrBaseURL: String = "matrix.org",
+    private mutating func setup(serverNameOrBaseURL: String = "soia.info",
                                 classicAppAccounts: [ClassicAppAccount] = [],
-                                availableSecrets: ClassicAppAccount.AvailableSecrets = .complete) async throws {
-        let configuration: ClientFactoryMock.Configuration = .init()
+                                availableSecrets: ClassicAppAccount.AvailableSecrets = .complete, issuer: String = CIVCOMOAuthPolicy.issuer) async throws {
+        var configuration: ClientFactoryMock.Configuration = .init()
+        if serverNameOrBaseURL == "example.com" {
+            configuration.homeserverClients["soia.info"] = configuration.homeserverClients["example.com"]
+        }
         let clientFactory = ClientFactoryMock(configuration)
-        
-        client = configuration.homeserverClients[serverNameOrBaseURL]
+        client = configuration.homeserverClients["soia.info"]
         encryption = EncryptionSDKMock()
         client.encryptionReturnValue = encryption
         
         userSessionStore = UserSessionStoreMock(.init())
         encryptionKeyProvider = MockEncryptionKeyProvider()
         
-        let classicAppManager = ClassicAppManagerMock(.init(accounts: classicAppAccounts,
+        let ownedClassicAccounts = classicAppAccounts.map { account in
+            ClassicAppAccount(userID: account.userID.replacingOccurrences(of: ":matrix.org", with: ":soia.info"),
+                              displayName: account.displayName, avatarURL: account.avatarURL,
+                              serverName: "soia.info", homeserverURL: "https://matrix.soia.info",
+                              cryptoStoreURL: account.cryptoStoreURL, cryptoStorePassphrase: account.cryptoStorePassphrase,
+                              accessToken: account.accessToken)
+        }
+        let classicAppManager = ClassicAppManagerMock(.init(accounts: ownedClassicAccounts,
                                                             availableSecrets: availableSecrets,
                                                             secretsBundle: SecretsBundleWithUserIdSDKMock()))
         
@@ -151,7 +213,7 @@ struct AuthenticationServiceTests {
                                         classicAppManager: classicAppManager,
                                         clientFactory: clientFactory,
                                         appSettings: .volatile(),
-                                        appHooks: AppHooks())
+                                        appHooks: AppHooks(), oauthMetadataProvider: CIVCOMTestOAuthMetadataProvider(issuer: issuer))
         
         if let classicAppAccount = service.classicAppAccount {
             await service.setupClassicAppAccountState()
