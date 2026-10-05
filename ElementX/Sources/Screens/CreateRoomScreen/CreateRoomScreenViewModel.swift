@@ -64,6 +64,7 @@ class CreateRoomScreenViewModel: CreateRoomScreenViewModelType, CreateRoomScreen
                                                                roomName: "",
                                                                serverName: userSession.clientProxy.userIDServerName ?? "",
                                                                isKnockingFeatureEnabled: userSettings.knockingEnabled,
+                                                               isPublicAccessAllowed: !userSettings.disablePublicRooms.publisher.value,
                                                                canSelectSpace: canSelectSpace,
                                                                aliasLocalPart: roomAliasNameFromRoomDisplayName(roomName: ""),
                                                                bindings: bindings),

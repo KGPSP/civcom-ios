@@ -44,6 +44,30 @@ final class CreateRoomScreenViewModelTests {
     }
     
     @Test
+    func publicRoomsDisabled() {
+        userSettings.disablePublicRooms.applyRemoteValue(true)
+        setup()
+        #expect(context.viewState.bindings.selectedAccessType == .private)
+        #expect(context.viewState.availableAccessTypes == [.askToJoin, .private])
+    }
+    
+    @Test
+    func publicSpacesDisabled() {
+        userSettings.disablePublicRooms.applyRemoteValue(true)
+        setup(isSpace: true, spacesSelectionMode: .none)
+        #expect(context.viewState.bindings.selectedAccessType == .private)
+        #expect(context.viewState.availableAccessTypes == [.private])
+    }
+    
+    @Test
+    func publicRoomsDisabledInAPublicSpace() {
+        userSettings.disablePublicRooms.applyRemoteValue(true)
+        let space = SpaceServiceRoom.mock(isSpace: true, joinRule: .public)
+        setup(spacesSelectionMode: .editableSpacesList(preSelectedSpace: space))
+        #expect(context.viewState.availableAccessTypes == [.askToJoin, .private])
+    }
+    
+    @Test
     func createRoomRequirements() {
         setup()
         #expect(!context.viewState.canCreateRoom)

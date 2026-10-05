@@ -442,6 +442,19 @@ final class SecurityAndPrivacyScreenViewModelTests {
         #expect(!context.viewState.canEnableEncryption)
     }
     
+    @Test
+    func anyoneOptionAvailability() {
+        setupViewModel(joinedParentSpaces: [], joinRule: .invite)
+        #expect(context.viewState.isAnyoneOptionAvailable)
+        
+        setupViewModel(joinedParentSpaces: [], joinRule: .invite, disablePublicRooms: true)
+        #expect(!context.viewState.isAnyoneOptionAvailable)
+        
+        // A room that is already public keeps showing its current access type.
+        setupViewModel(joinedParentSpaces: [], joinRule: .public, disablePublicRooms: true)
+        #expect(context.viewState.isAnyoneOptionAvailable)
+    }
+    
     // MARK: - Helpers
     
     /// Waits for `condition` **and** for the screen to have finished loading.
@@ -456,10 +469,12 @@ final class SecurityAndPrivacyScreenViewModelTests {
     private func setupViewModel(joinedParentSpaces: [SpaceServiceRoom],
                                 topLevelSpaces: [SpaceServiceRoom] = [],
                                 joinRule: ElementX.JoinRule,
-                                forceDisableE2EE: Bool = false) {
+                                forceDisableE2EE: Bool = false,
+                                disablePublicRooms: Bool = false) {
         let userSettings = UserSettings.volatile()
         userSettings.knockingEnabled = true
         userSettings.forceDisableE2EE.applyRemoteValue(forceDisableE2EE)
+        userSettings.disablePublicRooms.applyRemoteValue(disablePublicRooms)
         roomProxy = JoinedRoomProxyMock(.init(isEncrypted: false,
                                               canonicalAlias: "#room:matrix.org",
                                               members: .allMembersAsCreator,

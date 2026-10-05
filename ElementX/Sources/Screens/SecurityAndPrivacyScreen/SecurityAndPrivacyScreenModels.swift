@@ -21,6 +21,7 @@ struct SecurityAndPrivacyScreenViewState: BindableState {
     
     var canonicalAlias: String?
     var isKnockingEnabled: Bool
+    var isPublicAccessAllowed: Bool
     var isSpace: Bool
     
     var canEditAddress = false
@@ -55,6 +56,11 @@ struct SecurityAndPrivacyScreenViewState: BindableState {
             options.append(.invited)
         }
         return options.sorted()
+    }
+    
+    /// Keeps the option visible on rooms that are already public so the current state is shown.
+    var isAnyoneOptionAvailable: Bool {
+        currentSettings.accessType == .anyone || isPublicAccessAllowed
     }
     
     var isSpaceMembersOptionAvailable: Bool {
@@ -156,8 +162,10 @@ struct SecurityAndPrivacyScreenViewState: BindableState {
          historyVisibility: SecurityAndPrivacyHistoryVisibility,
          isSpace: Bool,
          isKnockingEnabled: Bool,
+         isPublicAccessAllowed: Bool,
          historySharingDetailsURL: URL) {
         self.isKnockingEnabled = isKnockingEnabled
+        self.isPublicAccessAllowed = isPublicAccessAllowed
         self.isSpace = isSpace
         
         let settings = SecurityAndPrivacySettings(accessType: accessType,

@@ -37,6 +37,7 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
                                                                        historyVisibility: roomProxy.infoPublisher.value.historyVisibility.toSecurityAndPrivacyHistoryVisibility,
                                                                        isSpace: roomProxy.infoPublisher.value.isSpace,
                                                                        isKnockingEnabled: userSettings.knockingEnabled,
+                                                                       isPublicAccessAllowed: !userSettings.disablePublicRooms.publisher.value,
                                                                        historySharingDetailsURL: userSettings.historySharingDetailsURL))
         
         if let powerLevels = roomProxy.infoPublisher.value.powerLevels {

@@ -26,6 +26,7 @@ nonisolated protocol CommonSettingsProtocol: AnyObject, Sendable {
     var bugReportRageshakeURL: RemotePreference<RageshakeConfiguration> { get }
     var contentScannerURL: RemotePreference<URL?> { get }
     var forceDisableE2EE: RemotePreference<Bool> { get }
+    var disablePublicRooms: RemotePreference<Bool> { get }
     var mapTilerConfiguration: RemotePreference<MapTilerConfiguration> { get }
     
     var enableOnlySignedDeviceIsolationMode: Bool { get }
@@ -304,6 +305,12 @@ final nonisolated class AppSettings: @unchecked Sendable {
     /// Whether the server forbids the use of E2EE: new rooms are created unencrypted and
     /// enabling encryption on existing rooms is not offered.
     let forceDisableE2EE: RemotePreference<Bool> = .init(false)
+    
+    // MARK: - Room creation
+    
+    /// Whether the server forbids public rooms and spaces: they can't be created and
+    /// existing ones can't be made public.
+    let disablePublicRooms: RemotePreference<Bool> = .init(false)
     
     // MARK: - Analytics
     
