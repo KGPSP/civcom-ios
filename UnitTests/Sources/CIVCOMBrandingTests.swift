@@ -38,6 +38,56 @@ struct CIVCOMBrandingTests {
         }
     }
     
+    @Test func dynamicColorsResolveOffMainActor() async {
+        DefaultCompoundHook().override(colors: Color.compound, uiColors: UIColor.compound)
+        let result = await Task.detached {
+            let colors = [UIColor.compound.bgCanvasDefault,
+                          UIColor.compound.bgCanvasDefaultLevel1,
+                          UIColor.compound.bgSubtlePrimary,
+                          UIColor.compound.bgSubtleSecondary,
+                          UIColor.compound.bgSubtleTertiary,
+                          UIColor.compound.bgActionSecondaryRest,
+                          UIColor.compound.bgActionSecondaryHovered,
+                          UIColor.compound.bgActionSecondaryPressed,
+                          UIColor.compound.bgActionPrimaryRest,
+                          UIColor.compound.bgActionPrimaryPressed,
+                          UIColor.compound.bgActionPrimaryHovered,
+                          UIColor.compound.textPrimary,
+                          UIColor.compound.textActionPrimary,
+                          UIColor.compound.iconPrimary,
+                          UIColor.compound.textSecondary,
+                          UIColor.compound.iconSecondary,
+                          UIColor.compound.textActionAccent,
+                          UIColor.compound.textLinkExternal,
+                          UIColor.compound.iconAccentPrimary,
+                          UIColor.compound.borderAccentPrimary,
+                          UIColor.compound.borderFocused,
+                          UIColor.compound.borderInteractivePrimary,
+                          UIColor.compound.borderInteractiveSecondary,
+                          UIColor.compound.separatorPrimary,
+                          UIColor.compound.separatorSecondary,
+                          UIColor.compound.textWarningPrimary,
+                          UIColor.compound.iconWarningPrimary,
+                          UIColor.compound.textSuccessPrimary,
+                          UIColor.compound.iconSuccessPrimary,
+                          UIColor.compound.borderSuccessPrimary,
+                          UIColor.compound.bgSuccessRest,
+                          UIColor.compound.textOnSolidPrimary,
+                          UIColor.compound.iconOnSolidPrimary]
+            for style in [UIUserInterfaceStyle.dark, .light] {
+                for color in colors {
+                    var red: CGFloat = 0
+                    var green: CGFloat = 0
+                    var blue: CGFloat = 0
+                    var alpha: CGFloat = 0
+                    guard color.resolvedColor(with: UITraitCollection(userInterfaceStyle: style)).getRed(&red, green: &green, blue: &blue, alpha: &alpha), alpha == 1 else { return false }
+                }
+            }
+            return true
+        }.value
+        #expect(result)
+    }
+    
     @Test func darkDefaultPreservesExistingChoice() {
         let store = VolatileUserDefaults()
         let settings = AppSettings(store: store)
