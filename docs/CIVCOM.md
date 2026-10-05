@@ -53,3 +53,10 @@ Publication requires independent native login, cross-platform E2EE/recovery/medi
 negative tests for arbitrary servers/calls/map events/deep links, dark/light/a11y review,
 AGPL corresponding source and dependency distribution clearance, and approved store/privacy disclosures.
 An unsigned compile or policy check does not satisfy those gates.
+
+## SOIA visual identity
+
+Canonical reference: KGPSP/soia-branding at 049915d7a6651c6beec9bfa1f2407b9f679bf937.
+The default operational theme is dark; saved light/system choices remain. Compound and UIKit share canonical semantic colors, with blue links/focus and green encryption status.
+The existing transmitter SVG remains byte-identical, without added chrome. Onboarding uses system Avenir Next Condensed when available (native Dynamic Type, SF fallback), SF body, monospaced metadata, a flat 4pt primary sign-in and neutral secondary QR. No font files or invented wordmark are distributed.
+Native palette/contrast and persistence tests precede the visual change. Actual dark/light and largest accessibility text captures are kept in reviewer evidence.
