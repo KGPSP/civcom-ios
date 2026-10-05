@@ -25,34 +25,24 @@ struct AuthenticationStartScreen: View {
     }
     
     var standardContent: some View {
-        // This view uses a GeometryReader instead of FullscreenDialog so its content takes the full
-        // height available (after taking the buttons out of the equation) in order for the logo
-        // and title to appear vertically centred and equally spaced within this content area.
         GeometryReader { geometry in
             ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    Spacer()
-                        .frame(height: UIConstants.spacerHeight(in: geometry))
-                    
+                VStack(spacing: 16) {
+                    Spacer(minLength: 24)
                     content
-                        .frame(width: geometry.size.width)
                         .accessibilityIdentifier(A11yIdentifiers.authenticationStartScreen.hidden)
-                    
+                    Spacer(minLength: 24)
                     buttons
-                        .frame(width: geometry.size.width)
-                        .padding(.bottom, geometry.safeAreaInsets.bottom > 0 ? 0 : 16)
-                        .padding(.top, 8)
-                    
-                    Spacer()
-                        .frame(height: UIConstants.spacerHeight(in: geometry))
+                    serviceFooter
                 }
-                .frame(minHeight: geometry.size.height)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 24)
+                .frame(maxWidth: .infinity, minHeight: geometry.size.height)
+                .readableFrame()
             }
             .scrollBounceBehavior(.basedOnSize)
         }
-        .background {
-            Color.compound.bgCanvasDefault
-        }
+        .background(Color.compound.bgCanvasDefault)
         .navigationBarHidden(context.viewState.classicAppMode == nil)
         .toolbar { toolbar }
         .alert(item: $context.alertInfo)
@@ -62,97 +52,68 @@ struct AuthenticationStartScreen: View {
     }
     
     var content: some View {
-        VStack(spacing: 0) {
-            Spacer()
-            
-            if verticalSizeClass == .regular {
-                Spacer()
-                
-                AuthenticationStartLogo(hideBrandChrome: context.viewState.hideBrandChrome,
-                                        isOnGradient: !context.viewState.hideBrandChrome)
-            }
-            
-            Spacer()
-            
-            if !context.viewState.hideBrandChrome {
-                VStack(spacing: 8) {
-                    Text(UntranslatedL10n.screenCivcomWelcomeTitleIos)
-                        .font(.compound.headingLGBold)
-                        .foregroundColor(.compound.textPrimary)
-                        .multilineTextAlignment(.center)
-                        .accessibilityAddTraits(.isHeader)
-                    Text(UntranslatedL10n.screenCivcomWelcomeMessageIos)
-                        .font(.compound.bodyLG)
-                        .foregroundColor(.compound.textPrimary)
-                        .multilineTextAlignment(.center)
-                }
-                .padding()
-                .fixedSize(horizontal: false, vertical: true)
-            }
-            
-            Spacer()
+        VStack(spacing: 16) {
+            AuthenticationStartLogo(hideBrandChrome: true, isOnGradient: false)
+            Text(UntranslatedL10n.screenCivcomWelcomeTitleIos)
+                .font(.civcomHeading(size: 36, relativeTo: .largeTitle))
+                .tracking(2)
+                .foregroundStyle(Color.compound.textPrimary)
+                .accessibilityAddTraits(.isHeader)
+            Text(UntranslatedL10n.screenCivcomTaglineIos)
+                .font(.civcomHeading(size: 17, relativeTo: .headline))
+                .tracking(1.5)
+                .foregroundStyle(Color.compound.textSecondary)
+            Text(UntranslatedL10n.screenCivcomWelcomeMessageIos)
+                .font(.compound.bodyLG)
+                .foregroundStyle(Color.compound.textPrimary)
         }
-        .padding(.bottom)
-        .padding(.horizontal, 16)
-        .readableFrame()
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+    
+    private var serviceFooter: some View {
+        VStack(spacing: 12) {
+            Rectangle()
+                .fill(Color.compound.separatorPrimary)
+                .frame(height: 1)
+            Text(UntranslatedL10n.screenCivcomServiceFooterIos)
+                .font(.system(.caption, design: .monospaced))
+                .monospacedDigit()
+                .foregroundStyle(Color.compound.textSecondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            versionText
+                .font(.system(.caption, design: .monospaced))
+                .monospacedDigit()
+                .foregroundStyle(Color.compound.textSecondary)
+                .accessibilityIdentifier(A11yIdentifiers.authenticationStartScreen.appVersion)
+        }
+        .padding(.top, 8)
     }
     
     /// The main action buttons.
     var buttons: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
+            Button { context.send(viewAction: .login) } label: {
+                Text(UntranslatedL10n.screenCivcomSignInIos)
+            }
+            .buttonStyle(CIVCOMButtonStyle(kind: .primary))
+            .accessibilityIdentifier(A11yIdentifiers.authenticationStartScreen.signIn)
+            
             if context.viewState.showQRCodeLoginButton {
                 Button { context.send(viewAction: .loginWithQR) } label: {
                     Label(L10n.screenOnboardingSignInWithQrCode, icon: \.qrCode)
                 }
-                .buttonStyle(.compound(.primary))
+                .buttonStyle(CIVCOMButtonStyle(kind: .secondary))
                 .accessibilityIdentifier(A11yIdentifiers.authenticationStartScreen.signInWithQr)
             }
-            
-            Button { context.send(viewAction: .login) } label: {
-                Text(UntranslatedL10n.screenCivcomSignInIos)
-            }
-            .buttonStyle(.compound(.primary))
-            .accessibilityIdentifier(A11yIdentifiers.authenticationStartScreen.signIn)
-            
-            if context.viewState.showCreateAccountButton {
-                Button { context.send(viewAction: .register) } label: {
-                    Text(L10n.screenCreateAccountTitle)
-                }
-                .buttonStyle(.compound(.tertiary))
-            }
-            
-            versionText
-                .font(.compound.bodySM)
-                .foregroundColor(.compound.textSecondary)
-                .onTapGesture(count: 7) {
-                    context.send(viewAction: .reportProblem)
-                }
-                .accessibilityIdentifier(A11yIdentifiers.authenticationStartScreen.appVersion)
-                .overlay(alignment: .trailing) {
-                    developerOptionsButton
-                        .scaledOffset(x: 32, y: -0.5, relativeTo: .compound.bodySM)
-                }
-                .padding(.top, 16)
         }
-        .padding(.horizontal, verticalSizeClass == .compact ? 128 : 24)
-        .readableFrame()
     }
     
     var versionText: Text {
         // Let's not deal with snapshotting a changing version string.
         let shortVersionString = ProcessInfo.isRunningTests ? "0.0.0" : InfoPlistReader.main.bundleShortVersionString
         return Text(L10n.screenOnboardingAppVersion(shortVersionString))
-    }
-    
-    @ViewBuilder
-    var developerOptionsButton: some View {
-        if CIVCOMPolicy.developerOptionsEnabled, AppSettings.appBuildType != .release, !ProcessInfo.isRunningTests {
-            Button { context.send(viewAction: .developerOptions) } label: {
-                CompoundIcon(\.code)
-                    .foregroundStyle(.compound.iconSecondary)
-            }
-            .accessibilityLabel(L10n.commonDeveloperOptions)
-        }
     }
     
     @ToolbarContentBuilder

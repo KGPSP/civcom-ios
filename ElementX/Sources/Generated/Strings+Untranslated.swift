@@ -10,8 +10,12 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal nonisolated enum UntranslatedL10n {
+  /// OFFICIAL SYSTEM · KG PSP · CIVCOM.SOIA.INFO
+  internal static var screenCivcomServiceFooterIos: String { return UntranslatedL10n.tr("Untranslated", "screen_civcom_service_footer_ios") }
   /// Sign in
   internal static var screenCivcomSignInIos: String { return UntranslatedL10n.tr("Untranslated", "screen_civcom_sign_in_ios") }
+  /// CIVIL PROTECTION COMMUNICATION SYSTEM
+  internal static var screenCivcomTaglineIos: String { return UntranslatedL10n.tr("Untranslated", "screen_civcom_tagline_ios") }
   /// Secure communication for KG PSP. Sign in with an account provided by your administrator.
   internal static var screenCivcomWelcomeMessageIos: String { return UntranslatedL10n.tr("Untranslated", "screen_civcom_welcome_message_ios") }
   /// CIVCOM

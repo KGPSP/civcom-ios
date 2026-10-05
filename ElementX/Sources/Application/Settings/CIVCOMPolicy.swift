@@ -19,6 +19,11 @@ nonisolated enum CIVCOMPolicy {
         return isHTTPSOrigin(url, host: "matrix.soia.info") && ["", "/"].contains(url.path) && url.query == nil && url.fragment == nil
     }
     
+    static func authenticationAPI(for provider: String) throws -> URL {
+        guard allowsAccountProvider(provider) else { throw CIVCOMProviderError.notAllowed }
+        return "https://matrix.soia.info"
+    }
+    
     static func isHTTPSOrigin(_ url: URL, host: String) -> Bool {
         url.scheme == "https" && url.host == host && (url.port == nil || url.port == 443) && url.user == nil && url.password == nil
     }

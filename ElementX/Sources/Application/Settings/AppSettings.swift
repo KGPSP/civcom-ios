@@ -182,7 +182,7 @@ final nonisolated class AppSettings: @unchecked Sendable {
     /// **Note:** This property isn't overridable as it in unexpected for forks to come across the error (or to even have a "Pro" app).
     let elementProAppStoreURL: URL = "https://apps.apple.com/app/element-pro-for-work/id6502951615"
     
-    @UserPreference(defaultValue: AppAppearance.system)
+    @UserPreference(defaultValue: AppAppearance.dark)
     var appAppearance: AppAppearance
     
     /// Tracks previous servers the user connected to for autocompletion purposes. Entries are made lowercase on write.

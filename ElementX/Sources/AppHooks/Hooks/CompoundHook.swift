@@ -15,29 +15,83 @@ nonisolated protocol CompoundHookProtocol: Sendable {
 
 struct DefaultCompoundHook: CompoundHookProtocol {
     func override(colors: CompoundColors, uiColors: CompoundUIColors) {
-        func adaptive(_ light: UInt32, _ dark: UInt32) -> UIColor {
-            UIColor { traits in
-                let hex = traits.userInterfaceStyle == .dark ? dark : light
-                return UIColor(red: CGFloat((hex >> 16) & 255) / 255, green: CGFloat((hex >> 8) & 255) / 255, blue: CGFloat(hex & 255) / 255, alpha: 1)
-            }
-        }
-        colors.override(\.bgCanvasDefault, with: Color(adaptive(0xF7F9FB, 0x121F33)))
-        colors.override(\.bgSubtlePrimary, with: Color(adaptive(0xEDF1F6, 0x0E1928)))
-        colors.override(\.textPrimary, with: Color(adaptive(0x14212F, 0xE8EEF5)))
-        colors.override(\.textSecondary, with: Color(adaptive(0x5C6E82, 0x8CA0B8)))
-        colors.override(\.bgActionPrimaryRest, with: Color(adaptive(0xC01F2A, 0xD22730)))
-        colors.override(\.textActionAccent, with: Color(adaptive(0x1D5FAE, 0x4C8FD6)))
-        colors.override(\.bgActionPrimaryPressed, with: Color(adaptive(0xC01F2A, 0xD22730)).opacity(0.85))
+        colors.override(\.bgCanvasDefault, with: Color(CIVCOMDynamicColor.adaptive(0xF7F9FB, 0x0B1523)))
+        uiColors.override(\.bgCanvasDefault, with: CIVCOMDynamicColor.adaptive(0xF7F9FB, 0x0B1523))
+        colors.override(\.bgCanvasDefaultLevel1, with: Color(CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x101D30)))
+        uiColors.override(\.bgCanvasDefaultLevel1, with: CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x101D30))
+        colors.override(\.bgSubtlePrimary, with: Color(CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x101D30)))
+        uiColors.override(\.bgSubtlePrimary, with: CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x101D30))
+        colors.override(\.bgSubtleSecondary, with: Color(CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x16263D)))
+        uiColors.override(\.bgSubtleSecondary, with: CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x16263D))
+        colors.override(\.bgSubtleTertiary, with: Color(CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x0A1420)))
+        uiColors.override(\.bgSubtleTertiary, with: CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x0A1420))
+        colors.override(\.bgActionSecondaryRest, with: Color(CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x101D30)))
+        uiColors.override(\.bgActionSecondaryRest, with: CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x101D30))
+        colors.override(\.bgActionSecondaryHovered, with: Color(CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x16263D)))
+        uiColors.override(\.bgActionSecondaryHovered, with: CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x16263D))
+        colors.override(\.bgActionSecondaryPressed, with: Color(CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x16263D)))
+        uiColors.override(\.bgActionSecondaryPressed, with: CIVCOMDynamicColor.adaptive(0xEDF1F6, 0x16263D))
+        colors.override(\.bgActionPrimaryRest, with: Color(CIVCOMDynamicColor.adaptive(0xC01F2A, 0xD22730)))
+        uiColors.override(\.bgActionPrimaryRest, with: CIVCOMDynamicColor.adaptive(0xC01F2A, 0xD22730))
+        colors.override(\.bgActionPrimaryPressed, with: Color(CIVCOMDynamicColor.adaptive(0xA51B25, 0xB82129)))
+        uiColors.override(\.bgActionPrimaryPressed, with: CIVCOMDynamicColor.adaptive(0xA51B25, 0xB82129))
+        colors.override(\.bgActionPrimaryHovered, with: Color(CIVCOMDynamicColor.adaptive(0xC01F2A, 0xD22730)))
+        uiColors.override(\.bgActionPrimaryHovered, with: CIVCOMDynamicColor.adaptive(0xC01F2A, 0xD22730))
+        colors.override(\.textPrimary, with: Color(CIVCOMDynamicColor.adaptive(0x14212F, 0xE8EEF5)))
+        uiColors.override(\.textPrimary, with: CIVCOMDynamicColor.adaptive(0x14212F, 0xE8EEF5))
+        colors.override(\.textActionPrimary, with: Color(CIVCOMDynamicColor.adaptive(0x14212F, 0xE8EEF5)))
+        uiColors.override(\.textActionPrimary, with: CIVCOMDynamicColor.adaptive(0x14212F, 0xE8EEF5))
+        colors.override(\.iconPrimary, with: Color(CIVCOMDynamicColor.adaptive(0x14212F, 0xE8EEF5)))
+        uiColors.override(\.iconPrimary, with: CIVCOMDynamicColor.adaptive(0x14212F, 0xE8EEF5))
+        colors.override(\.textSecondary, with: Color(CIVCOMDynamicColor.adaptive(0x5C6E82, 0x8CA0B8)))
+        uiColors.override(\.textSecondary, with: CIVCOMDynamicColor.adaptive(0x5C6E82, 0x8CA0B8))
+        colors.override(\.iconSecondary, with: Color(CIVCOMDynamicColor.adaptive(0x5C6E82, 0x8CA0B8)))
+        uiColors.override(\.iconSecondary, with: CIVCOMDynamicColor.adaptive(0x5C6E82, 0x8CA0B8))
+        colors.override(\.textActionAccent, with: Color(CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6)))
+        uiColors.override(\.textActionAccent, with: CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6))
+        colors.override(\.textLinkExternal, with: Color(CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6)))
+        uiColors.override(\.textLinkExternal, with: CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6))
+        colors.override(\.iconAccentPrimary, with: Color(CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6)))
+        uiColors.override(\.iconAccentPrimary, with: CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6))
+        colors.override(\.borderAccentPrimary, with: Color(CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6)))
+        uiColors.override(\.borderAccentPrimary, with: CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6))
+        colors.override(\.borderFocused, with: Color(CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6)))
+        uiColors.override(\.borderFocused, with: CIVCOMDynamicColor.adaptive(0x1D5FAE, 0x4C8FD6))
+        colors.override(\.borderInteractivePrimary, with: Color(CIVCOMDynamicColor.adaptive(0xC9D4E0, 0x223650)))
+        uiColors.override(\.borderInteractivePrimary, with: CIVCOMDynamicColor.adaptive(0xC9D4E0, 0x223650))
+        colors.override(\.borderInteractiveSecondary, with: Color(CIVCOMDynamicColor.adaptive(0xC9D4E0, 0x223650)))
+        uiColors.override(\.borderInteractiveSecondary, with: CIVCOMDynamicColor.adaptive(0xC9D4E0, 0x223650))
+        colors.override(\.separatorPrimary, with: Color(CIVCOMDynamicColor.adaptive(0xC9D4E0, 0x223650)))
+        uiColors.override(\.separatorPrimary, with: CIVCOMDynamicColor.adaptive(0xC9D4E0, 0x223650))
+        colors.override(\.separatorSecondary, with: Color(CIVCOMDynamicColor.adaptive(0xC9D4E0, 0x223650)))
+        uiColors.override(\.separatorSecondary, with: CIVCOMDynamicColor.adaptive(0xC9D4E0, 0x223650))
+        colors.override(\.textWarningPrimary, with: Color(CIVCOMDynamicColor.adaptive(0xD97A00, 0xF08A00)))
+        uiColors.override(\.textWarningPrimary, with: CIVCOMDynamicColor.adaptive(0xD97A00, 0xF08A00))
+        colors.override(\.iconWarningPrimary, with: Color(CIVCOMDynamicColor.adaptive(0xD97A00, 0xF08A00)))
+        uiColors.override(\.iconWarningPrimary, with: CIVCOMDynamicColor.adaptive(0xD97A00, 0xF08A00))
+        colors.override(\.textSuccessPrimary, with: Color(CIVCOMDynamicColor.adaptive(0x22794B, 0x2F9E63)))
+        uiColors.override(\.textSuccessPrimary, with: CIVCOMDynamicColor.adaptive(0x22794B, 0x2F9E63))
+        colors.override(\.iconSuccessPrimary, with: Color(CIVCOMDynamicColor.adaptive(0x22794B, 0x2F9E63)))
+        uiColors.override(\.iconSuccessPrimary, with: CIVCOMDynamicColor.adaptive(0x22794B, 0x2F9E63))
+        colors.override(\.borderSuccessPrimary, with: Color(CIVCOMDynamicColor.adaptive(0x22794B, 0x2F9E63)))
+        uiColors.override(\.borderSuccessPrimary, with: CIVCOMDynamicColor.adaptive(0x22794B, 0x2F9E63))
+        colors.override(\.bgSuccessRest, with: Color(CIVCOMDynamicColor.adaptive(0x22794B, 0x2F9E63)))
+        uiColors.override(\.bgSuccessRest, with: CIVCOMDynamicColor.adaptive(0x22794B, 0x2F9E63))
         colors.override(\.textOnSolidPrimary, with: .white)
-        colors.override(\.iconOnSolidPrimary, with: .white)
-        uiColors.override(\.bgCanvasDefault, with: adaptive(0xF7F9FB, 0x121F33))
-        uiColors.override(\.bgSubtlePrimary, with: adaptive(0xEDF1F6, 0x0E1928))
-        uiColors.override(\.textPrimary, with: adaptive(0x14212F, 0xE8EEF5))
-        uiColors.override(\.textSecondary, with: adaptive(0x5C6E82, 0x8CA0B8))
-        uiColors.override(\.bgActionPrimaryRest, with: adaptive(0xC01F2A, 0xD22730))
-        uiColors.override(\.bgActionPrimaryPressed, with: adaptive(0xC01F2A, 0xD22730).withAlphaComponent(0.85))
-        uiColors.override(\.textActionAccent, with: adaptive(0x1D5FAE, 0x4C8FD6))
         uiColors.override(\.textOnSolidPrimary, with: .white)
+        colors.override(\.iconOnSolidPrimary, with: .white)
         uiColors.override(\.iconOnSolidPrimary, with: .white)
+    }
+}
+
+nonisolated enum CIVCOMDynamicColor {
+    static func adaptive(_ light: UInt32, _ dark: UInt32) -> UIColor {
+        UIColor { traits in
+            let hex = traits.userInterfaceStyle == .dark ? dark : light
+            return UIColor(red: CGFloat((hex >> 16) & 255) / 255,
+                           green: CGFloat((hex >> 8) & 255) / 255,
+                           blue: CGFloat(hex & 255) / 255,
+                           alpha: 1)
+        }
     }
 }
