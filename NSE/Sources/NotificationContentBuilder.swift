@@ -37,12 +37,6 @@ nonisolated struct NotificationContentBuilder {
             notificationContent.eventID = nil
         }
         
-        if CIVCOMPolicy.genericNotifications {
-            CIVCOMPolicy.redact(notificationContent)
-            notificationContent.sound = notificationItem.isNoisy ? .init(named: notificationSoundName) : nil
-            return
-        }
-        
         // So that the UI groups notification that are received for the same room/thread but also for the same user
         let threadIdentifier = if userSession.threadsEnabled, let threadRootEventID = notificationItem.threadRootEventID {
             // If a threaded message we group notifications also by thread root id
@@ -56,6 +50,11 @@ nonisolated struct NotificationContentBuilder {
         
         MXLog.info("isNoisy: \(notificationItem.isNoisy)")
         notificationContent.sound = notificationItem.isNoisy ? .init(named: notificationSoundName) : nil
+        
+        if CIVCOMPolicy.genericNotifications {
+            CIVCOMPolicy.redact(notificationContent)
+            return
+        }
         
         switch notificationItem.event {
         case .none:

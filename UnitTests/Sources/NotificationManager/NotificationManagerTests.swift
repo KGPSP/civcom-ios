@@ -14,18 +14,20 @@ import Testing
 @MainActor
 final class NotificationManagerTests {
     var notificationManager: NotificationManager!
-    private let clientProxy = ClientProxyMock(.init(userID: "@test:user.net"))
+    private let clientProxy = ClientProxyMock(.init(userID: "@fixture:soia.info"))
     private lazy var mockUserSession = UserSessionMock(.init(clientProxy: clientProxy))
     private var notificationCenter: UserNotificationCenterMock!
     private var authorizationStatusWasGranted = false
     private var shouldDisplayInAppNotificationReturnValue = false
     private var handleInlineReplyDelegateCalled = false
     private var notificationTappedDelegateCalled = false
+    private var tappedContent: UNNotificationContent?
     private var registerForRemoteNotificationsDelegateCalled: (() -> Void)?
     private let appSettings: AppSettings
     
     init() {
         appSettings = AppSettings.volatile()
+        clientProxy.pusherNotificationClientIdentifier = "48df8697ad56e8c97b385a49463b1674db8c60a358d08c1241eb06329f46d855"
         notificationCenter = UserNotificationCenterMock()
         notificationCenter.requestAuthorizationOptionsReturnValue = true
         notificationCenter.authorizationStatusReturnValue = .authorized
@@ -39,6 +41,12 @@ final class NotificationManagerTests {
     isolated deinit {
         notificationCenter = nil
         notificationManager = nil
+    }
+    
+    @Test func malformedRoutingIdentityDoesNotRegister() async {
+        clientProxy.pusherNotificationClientIdentifier = "invalid"
+        #expect(await notificationManager.register(with: Data()) == false)
+        #expect(!clientProxy.setPusherWithCalled)
     }
     
     @Test
@@ -67,7 +75,7 @@ final class NotificationManagerTests {
     
     @Test
     func whenRegistered_pusherIsCalledWithCorrectValues() async throws {
-        let pushkeyData = Data("1234".utf8)
+        let pushkeyData = Data(1...32)
         _ = await notificationManager.register(with: pushkeyData)
         
         guard let configuration = clientProxy.setPusherWithReceivedInvocations.first else {
@@ -88,9 +96,9 @@ final class NotificationManagerTests {
         #expect(data.url == appSettings.pushGatewayNotifyEndpoint.absoluteString)
         #expect(data.format == .eventIdOnly)
         let defaultPayload = APNSPayload(aps: APSInfo(mutableContent: 1,
-                                                      alert: APSAlert(locKey: "Notification",
+                                                      alert: APSAlert(locKey: nil,
                                                                       locArgs: [])),
-                                         pusherNotificationClientIdentifier: nil)
+                                         pusherNotificationClientIdentifier: clientProxy.pusherNotificationClientIdentifier)
         #expect(try data.defaultPayload == (defaultPayload.toJsonString()))
     }
     
@@ -112,8 +120,9 @@ final class NotificationManagerTests {
     func whenShowLocalNotification_notificationRequestGetsAdded() async throws {
         await notificationManager.showLocalNotification(with: "Title", subtitle: "Subtitle")
         let request = try #require(notificationCenter.addReceivedRequest)
-        #expect(request.content.title == "Title")
-        #expect(request.content.subtitle == "Subtitle")
+        #expect(request.content.title == "CIVCOM")
+        #expect(request.content.body == "Nowa wiadomość")
+        #expect(request.content.subtitle.isEmpty)
     }
     
     @Test
@@ -238,6 +247,19 @@ final class NotificationManagerTests {
         #expect(notificationTappedDelegateCalled)
     }
     
+    @Test func canonicalTapPreservesDerivedReceiverAndRouting() async throws {
+        notificationManager.delegate = self
+        let userInfo: [AnyHashable: Any] = try ["pusher_notification_client_identifier": #require(clientProxy.pusherNotificationClientIdentifier),
+                                                "receiver_id": "@fixture:soia.info", "room_id": "!synthetic-ios-contract", "event_id": "$synthetic-ios-contract"]
+        let response = try UNTextInputNotificationResponse.with(userInfo: userInfo, actionIdentifier: UNNotificationDefaultActionIdentifier)
+        await notificationManager.userNotificationCenter(UNUserNotificationCenter.current(), didReceive: response)
+        let content = try #require(tappedContent)
+        #expect(content.receiverID == "@fixture:soia.info")
+        #expect(content.roomID == "!synthetic-ios-contract")
+        #expect(content.eventID == "$synthetic-ios-contract")
+        #expect(content.pusherNotificationClientIdentifier == clientProxy.pusherNotificationClientIdentifier)
+    }
+    
     @Test
     func updatingAppBadgeCountUsesTheClientSideCount() async {
         appSettings.roomListNotificationCountEnabled = true
@@ -286,6 +308,7 @@ extension NotificationManagerTests: @MainActor NotificationManagerDelegate {
     
     func notificationTapped(content: UNNotificationContent) async {
         notificationTappedDelegateCalled = true
+        tappedContent = content
     }
     
     func handleInlineReply(_ service: ElementX.NotificationManagerProtocol, content: UNNotificationContent, replyText: String) async {
