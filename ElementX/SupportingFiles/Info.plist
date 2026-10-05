@@ -4,7 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>io.element.elementx.background.refresh</string>
+		<string>$(BASE_BUNDLE_IDENTIFIER).background.refresh</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -59,10 +59,6 @@
 	<string>To take pictures or videos and send them as a message $(APP_DISPLAY_NAME) needs access to the camera.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Face ID is used to access your app.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>To share your live location, $(APP_DISPLAY_NAME) needs location access when the app is in the background.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Grant location access so that $(APP_DISPLAY_NAME) can share your location.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>To record and send messages with audio, $(APP_DISPLAY_NAME) needs to access the microphone.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -70,7 +66,6 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>INSendMessageIntent</string>
-		<string>INStartCallIntent</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
@@ -82,8 +77,6 @@
 		<string>audio</string>
 		<string>fetch</string>
 		<string>processing</string>
-		<string>voip</string>
-		<string>location</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict>

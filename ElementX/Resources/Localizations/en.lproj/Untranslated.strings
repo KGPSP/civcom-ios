@@ -14,3 +14,7 @@
 "soft_logout_signin_notice" = "Your homeserver (%1$s) admin has signed you out of your account %2$s (%3$s).";
 "soft_logout_signin_title" = "Sign in";
 "untranslated" = "Untranslated";
+
+"screen_civcom_welcome_title_ios" = "CIVCOM";
+"screen_civcom_welcome_message_ios" = "Secure communication for KG PSP. Sign in with an account provided by your administrator.";
+"screen_civcom_sign_in_ios" = "Sign in";
