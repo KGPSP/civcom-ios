@@ -14,6 +14,10 @@
       {
         "key" : "IS_RUNNING_UNIT_TESTS",
         "value" : "1"
+      },
+      {
+        "key" : "CIVCOM_LIVE_BOOTSTRAP",
+        "value" : "0"
       }
     ],
     "testExecutionOrdering" : "random",
