@@ -24,6 +24,6 @@ jobs:
       - name: Compile for simulator
         run: |
           xcodebuild -project ElementX.xcodeproj -scheme ElementX -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData CODE_SIGNING_ALLOWED=NO build
-      - name: CIVCOM regression tests
+      - name: Full native Core unit tests
         run: |
-          xcodebuild -project ElementX.xcodeproj -scheme UnitTests -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -derivedDataPath build/DerivedData -only-testing:UnitTests/CIVCOMPolicyTests -only-testing:UnitTests/CIVCOMBrandingTests -only-testing:UnitTests/KeychainControllerTests -only-testing:UnitTests/SessionVerificationStateMachineTests -only-testing:UnitTests/SessionVerificationViewModelTests -only-testing:UnitTests/VoiceMessageMediaManagerTests -only-testing:UnitTests/MediaUploadingPreprocessorTests -only-testing:UnitTests/MediaUploadPreviewScreenViewModelTests -only-testing:UnitTests/TimelineMediaPreviewViewModelTests -only-testing:UnitTests/LocalizationTests CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test
+          xcodebuild -project ElementX.xcodeproj -scheme UnitTests -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -derivedDataPath build/DerivedData -parallel-testing-enabled NO -resultBundlePath build/CoreUnitTests.xcresult CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test

@@ -9,6 +9,8 @@
     }
   ],
   "defaultOptions" : {
+    "language" : "en",
+    "region" : "GB",
     "defaultTestExecutionTimeAllowance" : 60,
     "environmentVariableEntries" : [
       {

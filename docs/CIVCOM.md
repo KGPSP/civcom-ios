@@ -25,7 +25,7 @@ Every displayed notification uses CIVCOM / Nowa wiadomość; room/event IDs rema
 ## Authentication and scope
 
 Only soia.info and https://matrix.soia.info are accepted, including QR, provisioning and session restoration.
-OAuth authorization origin is https://auth.soia.info, discovered and validated by the upstream SDK.
+New OAuth/QR preflight requires issuer https://auth.soia.info/ and owned HTTPS metadata endpoints before SDK authorization/scan; SDK cached/refetched issuer binding is not exposed or proven.
 Client URI: https://civcom.soia.info/apps/ios.
 Callback: https://civcom.soia.info/oauth/ios/{application-ID}.
 Associated domains: applinks:civcom.soia.info and webcredentials:civcom.soia.info.
@@ -60,3 +60,10 @@ Canonical reference: KGPSP/soia-branding at 049915d7a6651c6beec9bfa1f2407b9f679b
 The default operational theme is dark; saved light/system choices remain. Compound and UIKit share canonical semantic colors, with blue links/focus and green encryption status.
 The existing transmitter SVG remains byte-identical, without added chrome. Onboarding uses system Avenir Next Condensed when available (native Dynamic Type, SF fallback), SF body, monospaced metadata, a flat 4pt primary sign-in and neutral secondary QR. No font files or invented wordmark are distributed.
 Native palette/contrast and persistence tests precede the visual change. Actual dark/light and largest accessibility text captures are kept in reviewer evidence.
+
+## Managed authentication boundary (narrow proposal B)
+
+Only approved aliases reach https://matrix.soia.info; restoration also requires an owned soia.info MXID. Accepted stored aliases are normalized in a local Session value copy to the actual API for both the SDK builder and restoreSession input; stored crypto/token fields are untouched. New OAuth and QR preflight owned Matrix v1/auth_metadata for exact issuer https://auth.soia.info/ and owned HTTPS endpoints. Normal preflight precedes SDK authorization; QR preflight precedes SDK client creation/scan. Callback origin/path checks remain. The upstream SDK and keychain/crypto-directory/token mechanics remain unchanged; no legacy witness hard gate, new reauthentication state, quarantine or automatic SDK/device migration is introduced.
+Pinned FFI exposes no binding of SDK cached/refetched issuer metadata to preflight: NOT_PROVEN, not a formal hardpin. This relies on the controlled Matrix/MAS backend; a new CIVCOM app/group namespace has no actual migrated legacy accounts. Account login, offline authenticated history/recovery and physical APNs remain NOT_RUN.
+The generic v1 NSE derives receiverID only from a matching active owned local credential; it creates no SDK client, fetch/decrypt/read-state work, refresh writer, call/map/preview/action. Foreground validation handles room/event routing. SDK event filtering and fresh server authentication in NSE are not provided/proven, so unsupported/redacted/read events may produce a generic alert and unread-badge parity is not claimed. Test/physical delivery acceptance remains separate.
+CI executes full UnitTests rather than selective masking. UnitTests uses explicit English locale for inherited string assertions; Polish actual UI captures are separate. The live public bootstrap/preflight probe remains opt-in and never performs DCR/account login.

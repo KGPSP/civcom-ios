@@ -36,30 +36,21 @@ final class AuthenticationStartScreenViewModelTests {
         #expect(authenticationService.homeserver.value.loginMode == .unknown)
         #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesCallsCount == 0)
         
-        // When tapping any of the buttons on the screen
-        let actions: [(AuthenticationStartScreenViewAction, AuthenticationStartScreenViewModelAction)] = [
-            (.loginWithQR, .loginWithQR),
-            (.login, .login),
-            (.register, .register),
-            (.reportProblem, .reportProblem)
-        ]
-        
-        for action in actions {
-            let deferred = deferFulfillment(viewModel.actions) { $0 == action.1 }
-            context.send(viewAction: action.0)
-            try await deferred.fulfill()
-            
-            // Then the authentication service should not be used yet.
-            #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksCallsCount == 0)
-            #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesCallsCount == 0)
-            #expect(authenticationService.homeserver.value.loginMode == .unknown)
-        }
+        #expect(!context.viewState.showCreateAccountButton)
+        #expect(context.viewState.serverNameOrBaseURL == "soia.info")
+        let deferred = deferFulfillment(viewModel.actions) { $0 == .loginWithQR }
+        context.send(viewAction: .loginWithQR)
+        try await deferred.fulfill()
+        #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksCallsCount == 0)
+        let blocked = deferFailure(viewModel.actions, timeout: .milliseconds(100)) { $0 == .register }
+        context.send(viewAction: .register)
+        try await blocked.fulfill()
     }
     
     @Test
     func provisionedOAuthState() async throws {
         // Given a view model that has been provisioned with a server that supports OAuth.
-        await setupViewModel(provisioningParameters: .init(accountProvider: "company.com", loginHint: "user@company.com"))
+        await setupViewModel(provisioningParameters: .init(accountProvider: "soia.info", loginHint: "user@soia.info"))
         #expect(authenticationService.homeserver.value.loginMode == .unknown)
         #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesCallsCount == 0)
         
@@ -72,14 +63,14 @@ final class AuthenticationStartScreenViewModelTests {
         #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksCallsCount == 1)
         #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesCallsCount == 1)
         #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesReceivedArguments?.prompt == .consent)
-        #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesReceivedArguments?.loginHint == "user@company.com")
+        #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesReceivedArguments?.loginHint == "user@soia.info")
         #expect(authenticationService.homeserver.value.loginMode == .oAuth(supportsCreatePrompt: false))
     }
     
     @Test
     func provisionedPasswordState() async throws {
         // Given a view model that has been provisioned with a server that does not support OAuth.
-        await setupViewModel(provisioningParameters: .init(accountProvider: "company.com", loginHint: "user@company.com"), supportsOAuth: false)
+        await setupViewModel(provisioningParameters: .init(accountProvider: "soia.info", loginHint: "user@soia.info"), supportsOAuth: false)
         #expect(authenticationService.homeserver.value.loginMode == .unknown)
         #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesCallsCount == 0)
         
@@ -97,7 +88,7 @@ final class AuthenticationStartScreenViewModelTests {
     @Test
     func singleProviderOAuthState() async throws {
         // Given a view model that for an app that only allows the use of a single provider that supports OAuth.
-        setAllowedAccountProviders([.generic("company.com")])
+        setAllowedAccountProviders([.generic("soia.info")])
         await setupViewModel()
         #expect(authenticationService.homeserver.value.loginMode == .unknown)
         #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesCallsCount == 0)
@@ -118,7 +109,7 @@ final class AuthenticationStartScreenViewModelTests {
     @Test
     func singleProviderPasswordState() async throws {
         // Given a view model that for an app that only allows the use of a single provider that does not support OAuth.
-        setAllowedAccountProviders([.generic("company.com")])
+        setAllowedAccountProviders([.generic("soia.info")])
         await setupViewModel(supportsOAuth: false)
         #expect(authenticationService.homeserver.value.loginMode == .unknown)
         #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesCallsCount == 0)
@@ -154,7 +145,7 @@ final class AuthenticationStartScreenViewModelTests {
         try await deferred.fulfill()
         
         #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksCallsCount == 1)
-        #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksReceivedArguments?.serverNameOrBaseURL == "company.com")
+        #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksReceivedArguments?.serverNameOrBaseURL == "soia.info")
         #expect(authenticationService.homeserver.value.loginMode == .oAuth(supportsCreatePrompt: false))
         #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesReceivedArguments?.loginHint == "mxid:\(classicAppAccount.userID)")
     }
@@ -163,7 +154,7 @@ final class AuthenticationStartScreenViewModelTests {
     func classicAppAccountWithoutWellKnown() async throws {
         // Given a view model where the Classic app account's server name has no well-known file.
         let classicAppAccount = makeClassicAppAccount(serverName: "unknown-server.org",
-                                                      homeserverURL: "https://matrix.company.com")
+                                                      homeserverURL: "https://matrix.soia.info")
         await setupViewModel(classicAppAccount: classicAppAccount)
         guard case .welcomeBack(let account) = context.viewState.classicAppMode else {
             Issue.record("Expected classicAppMode to be .welcomeBack")
@@ -177,8 +168,8 @@ final class AuthenticationStartScreenViewModelTests {
         context.send(viewAction: .continueWithClassic(classicAppAccount))
         try await deferred.fulfill()
         
-        #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksCallsCount == 2)
-        #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksReceivedArguments?.serverNameOrBaseURL == "https://matrix.company.com")
+        #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksCallsCount == 1)
+        #expect(clientFactory.makeAuthenticationClientServerNameOrBaseURLSessionDirectoriesPassphraseClientSessionDelegateAppSettingsAppHooksReceivedArguments?.serverNameOrBaseURL == "https://matrix.soia.info")
         #expect(authenticationService.homeserver.value.loginMode == .oAuth(supportsCreatePrompt: false))
         #expect(client.urlForOauthOauthConfigurationPromptLoginHintDeviceIdAdditionalScopesReceivedArguments?.loginHint == "mxid:\(classicAppAccount.userID)")
     }
@@ -199,22 +190,22 @@ final class AuthenticationStartScreenViewModelTests {
     }
     
     @Test
-    func classicAppAccountWithProvisioningLink() async {
+    func managedProviderKeepsMatchingClassicAccount() async {
         // Given a view model that has been provisioned with a provisioning link (and a classic account exists).
         let classicAppAccount = makeClassicAppAccount()
         await setupViewModel(classicAppAccount: classicAppAccount,
-                             provisioningParameters: .init(accountProvider: "company.com", loginHint: nil))
+                             provisioningParameters: .init(accountProvider: "soia.info", loginHint: nil))
         
-        // Then the Classic app account should not be shown — provisioning takes precedence.
-        #expect(context.viewState.classicAppMode == nil)
+        // Managed-provider restrictions retain only a matching classic account.
+        #expect(context.viewState.classicAppMode != nil)
     }
     
     @Test
     func singleProviderWithMatchingClassicAppAccount() async {
         // Given a view model for an app that only allows a single provider that matches the Classic account's server.
-        let classicAppAccount = makeClassicAppAccount(serverName: "company.com",
-                                                      homeserverURL: "https://matrix.company.com")
-        setAllowedAccountProviders([.generic("company.com")])
+        let classicAppAccount = makeClassicAppAccount(serverName: "soia.info",
+                                                      homeserverURL: "https://matrix.soia.info")
+        setAllowedAccountProviders([.generic("soia.info")])
         await setupViewModel(classicAppAccount: classicAppAccount)
         
         // Then the Classic app account should be shown as a welcome-back option.
@@ -230,7 +221,7 @@ final class AuthenticationStartScreenViewModelTests {
         // Given a view model for an app that only allows a single provider that does NOT match the Classic account's server.
         let classicAppAccount = makeClassicAppAccount(serverName: "other-server.org",
                                                       homeserverURL: "https://matrix.other-server.org")
-        setAllowedAccountProviders([.generic("company.com")])
+        setAllowedAccountProviders([.generic("soia.info")])
         await setupViewModel(classicAppAccount: classicAppAccount)
         
         // Then the Classic app account should not be shown since the server is not in the allowed providers.
@@ -279,12 +270,12 @@ final class AuthenticationStartScreenViewModelTests {
                                 supportsPasswordLogin: Bool = true,
                                 availableSecrets: ClassicAppAccount.AvailableSecrets = .complete) async {
         // Manually create a configuration as the default account provider setting is immutable.
-        client = ClientSDKMock(.init(oAuthLoginURL: supportsOAuth ? "https://account.company.com/authorize" : nil,
+        client = ClientSDKMock(.init(oAuthLoginURL: supportsOAuth ? "https://auth.soia.info/authorize" : nil,
                                      supportsOAuthCreatePrompt: false,
                                      supportsPasswordLogin: supportsPasswordLogin))
         // Map both the server name and the homeserver URL so fallback lookups work.
-        let homeserverClients: [String: ClientSDKMock] = ["company.com": client,
-                                                          "https://matrix.company.com": client]
+        let homeserverClients: [String: ClientSDKMock] = ["soia.info": client,
+                                                          "https://matrix.soia.info": client]
         let configuration = ClientFactoryMock.Configuration(homeserverClients: homeserverClients)
         
         if let classicAppAccount {
@@ -301,7 +292,7 @@ final class AuthenticationStartScreenViewModelTests {
                                                       classicAppManager: classicAppManager,
                                                       clientFactory: clientFactory,
                                                       appSettings: appSettings,
-                                                      appHooks: AppHooks())
+                                                      appHooks: AppHooks(), oauthMetadataProvider: CIVCOMTestOAuthMetadataProvider())
         
         await authenticationService.setupClassicAppAccountState()
         
@@ -318,8 +309,8 @@ final class AuthenticationStartScreenViewModelTests {
         viewModel.context.send(viewAction: .updateWindow(UIWindow()))
     }
     
-    private func makeClassicAppAccount(serverName: String = "company.com",
-                                       homeserverURL: URL = "https://matrix.company.com") -> ClassicAppAccount {
+    private func makeClassicAppAccount(serverName: String = "soia.info",
+                                       homeserverURL: URL = "https://matrix.soia.info") -> ClassicAppAccount {
         ClassicAppAccount(userID: "@user:\(serverName)",
                           displayName: "Classic User",
                           avatarURL: nil,
