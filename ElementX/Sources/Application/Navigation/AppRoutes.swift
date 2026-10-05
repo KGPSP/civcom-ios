@@ -191,13 +191,14 @@ private struct AccountProvisioningURLParser: URLParser {
     let domain: String
     
     func route(from url: URL) -> AppRoute? {
-        guard url.host() == domain else { return nil }
+        guard CIVCOMPolicy.isHTTPSOrigin(url, host: domain) else { return nil }
         
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let serverName = components.queryItems?.first(where: { $0.name == AccountProvisioningParameters.CodingKeys.accountProvider.rawValue })?.value else {
             return nil
         }
         
+        guard CIVCOMPolicy.allowsAccountProvider(serverName) else { return nil }
         let loginHint = components.queryItems?.first { $0.name == AccountProvisioningParameters.CodingKeys.loginHint.rawValue }?.value
         
         return .accountProvisioningLink(.init(accountProvider: serverName, loginHint: loginHint))
@@ -209,7 +210,7 @@ struct OAuthCallbackURLParser: URLParser {
     let redirectURL: URL
     
     func route(from url: URL) -> AppRoute? {
-        guard url.absoluteString.starts(with: redirectURL.absoluteString) else { return nil }
+        guard CIVCOMPolicy.isCallback(url, for: redirectURL) else { return nil }
         return .oAuthCallback(url: url)
     }
 }

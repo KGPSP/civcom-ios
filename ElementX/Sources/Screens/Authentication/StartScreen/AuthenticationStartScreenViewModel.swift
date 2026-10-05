@@ -89,6 +89,7 @@ class AuthenticationStartScreenViewModel: AuthenticationStartScreenViewModelType
                 actionsSubject.send(.reportProblem)
             }
         case .developerOptions:
+            guard CIVCOMPolicy.developerOptionsEnabled else { return }
             actionsSubject.send(.developerOptions)
             
         case .loginWithQR:
@@ -96,6 +97,7 @@ class AuthenticationStartScreenViewModel: AuthenticationStartScreenViewModelType
         case .login:
             Task { await login() }
         case .register:
+            guard state.showCreateAccountButton else { return }
             actionsSubject.send(.register)
             
         case .continueWithClassic(let account):

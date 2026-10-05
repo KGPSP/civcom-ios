@@ -74,6 +74,8 @@ class AuthenticationService: AuthenticationServiceProtocol {
     // MARK: - Public
     
     func configure(for serverNameOrBaseURL: String, flow: AuthenticationFlow) async -> Result<Void, AuthenticationServiceError> {
+        guard flow == .login else { return .failure(.registrationNotSupported) }
+        guard CIVCOMPolicy.allowsAccountProvider(serverNameOrBaseURL) else { return .failure(.invalidServerNameOrBaseURL) }
         do {
             var homeserver = LoginHomeserver(accountProvider: .generic(serverNameOrBaseURL), loginMode: .unknown)
             
@@ -123,7 +125,9 @@ class AuthenticationService: AuthenticationServiceProtocol {
                                                          loginHint: loginHint,
                                                          deviceId: nil,
                                                          additionalScopes: nil)
-            return .success(OAuthAuthorizationDataProxy(underlyingData: oAuthData))
+            let authorization = OAuthAuthorizationDataProxy(underlyingData: oAuthData)
+            guard CIVCOMPolicy.isHTTPSOrigin(authorization.url, host: "auth.soia.info") else { return .failure(.oAuthError(.urlFailure)) }
+            return .success(authorization)
         } catch {
             MXLog.error("Failed to get URL for OAuth login: \(error)")
             return .failure(.oAuthError(.urlFailure))
@@ -137,7 +141,7 @@ class AuthenticationService: AuthenticationServiceProtocol {
     }
     
     func loginWithOAuthCallback(_ callbackURL: URL) async -> Result<UserSessionProtocol, AuthenticationServiceError> {
-        guard let client else { return .failure(.failedLoggingIn) }
+        guard CIVCOMPolicy.isCallback(callbackURL, for: appSettings.oAuthRedirectURL), let client else { return .failure(.failedLoggingIn) }
         do {
             try await client.loginWithOauthCallback(callbackUrl: callbackURL.absoluteString)
             await verifyClientIfPossible(client: client)
@@ -219,6 +223,10 @@ class AuthenticationService: AuthenticationServiceProtocol {
             }
         }
         
+        guard CIVCOMPolicy.allowsAccountProvider(scannedServerNameOrBaseURL) else {
+            progressSubject.send(completion: .failure(.invalidServerNameOrBaseURL))
+            return progressSubject.asCurrentValuePublisher()
+        }
         // The SDK calls the listener from arbitrary threads; onMainActor forwards the progress
         // updates on the main actor in FIFO order.
         let listener = SDKListener.onMainActor { rustProgress in

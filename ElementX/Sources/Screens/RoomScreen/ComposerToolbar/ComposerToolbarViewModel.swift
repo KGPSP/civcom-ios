@@ -80,7 +80,7 @@ final class ComposerToolbarViewModel: ComposerToolbarViewModelType, ComposerTool
         
         super.init(initialViewState: ComposerToolbarViewState(wysiwygViewModel: wysiwygViewModel,
                                                               isRoomEncrypted: roomProxy.infoPublisher.value.isEncrypted,
-                                                              isLocationSharingEnabled: appSettings.mapTilerConfiguration.publisher.value.isEnabled,
+                                                              isLocationSharingEnabled: CIVCOMPolicy.mapsEnabled,
                                                               bindings: .init()),
                    mediaProvider: mediaProvider)
         
@@ -229,6 +229,9 @@ final class ComposerToolbarViewModel: ComposerToolbarViewModelType, ComposerTool
         case .cancelEdit:
             cancelEdit()
         case .attach(let attachment):
+            if case .location = attachment, !CIVCOMPolicy.mapsEnabled {
+                return
+            }
             state.bindings.composerFocused = false
             actionsSubject.send(.attach(attachment))
         case .handlePasteOrDrop(let providers):

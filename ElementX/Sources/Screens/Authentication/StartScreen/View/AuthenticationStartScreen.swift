@@ -51,7 +51,7 @@ struct AuthenticationStartScreen: View {
             .scrollBounceBehavior(.basedOnSize)
         }
         .background {
-            AuthenticationStartScreenBackgroundImage()
+            Color.compound.bgCanvasDefault
         }
         .navigationBarHidden(context.viewState.classicAppMode == nil)
         .toolbar { toolbar }
@@ -76,12 +76,12 @@ struct AuthenticationStartScreen: View {
             
             if !context.viewState.hideBrandChrome {
                 VStack(spacing: 8) {
-                    Text(L10n.screenOnboardingWelcomeTitle)
+                    Text(UntranslatedL10n.screenCivcomWelcomeTitleIos)
                         .font(.compound.headingLGBold)
                         .foregroundColor(.compound.textPrimary)
                         .multilineTextAlignment(.center)
                         .accessibilityAddTraits(.isHeader)
-                    Text(L10n.screenOnboardingWelcomeMessage(InfoPlistReader.main.productionAppName))
+                    Text(UntranslatedL10n.screenCivcomWelcomeMessageIos)
                         .font(.compound.bodyLG)
                         .foregroundColor(.compound.textPrimary)
                         .multilineTextAlignment(.center)
@@ -109,7 +109,7 @@ struct AuthenticationStartScreen: View {
             }
             
             Button { context.send(viewAction: .login) } label: {
-                Text(context.viewState.loginButtonTitle)
+                Text(UntranslatedL10n.screenCivcomSignInIos)
             }
             .buttonStyle(.compound(.primary))
             .accessibilityIdentifier(A11yIdentifiers.authenticationStartScreen.signIn)
@@ -146,7 +146,7 @@ struct AuthenticationStartScreen: View {
     
     @ViewBuilder
     var developerOptionsButton: some View {
-        if AppSettings.appBuildType != .release, !ProcessInfo.isRunningTests {
+        if CIVCOMPolicy.developerOptionsEnabled, AppSettings.appBuildType != .release, !ProcessInfo.isRunningTests {
             Button { context.send(viewAction: .developerOptions) } label: {
                 CompoundIcon(\.code)
                     .foregroundStyle(.compound.iconSecondary)

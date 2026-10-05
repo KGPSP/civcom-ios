@@ -20,6 +20,7 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                                   clientSessionDelegate: ClientSessionDelegate,
                                   appSettings: AppSettings,
                                   appHooks: AppHooks) async throws -> ClientProtocol {
+        guard CIVCOMPolicy.allowsAccountProvider(serverNameOrBaseURL) else { throw AuthenticationServiceError.invalidServerNameOrBaseURL }
         let builder = makeBaseBuilder(httpProxy: appSettings.websiteURL.globalProxy,
                                       discoverSlidingSync: true,
                                       sessionDelegate: clientSessionDelegate,
@@ -38,6 +39,7 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                             clientSessionDelegate: ClientSessionDelegate,
                             appSettings: AppSettings,
                             appHooks: AppHooks) async throws -> ClientProtocol {
+        guard CIVCOMPolicy.allowsAccountProvider(serverNameOrBaseURL) else { throw AuthenticationServiceError.invalidServerNameOrBaseURL }
         let builder = makeBaseBuilder(httpProxy: appSettings.websiteURL.globalProxy,
                                       discoverSlidingSync: true,
                                       sessionDelegate: clientSessionDelegate,
@@ -57,6 +59,7 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                        appSettings: AppSettings,
                        appHooks: AppHooks) async throws -> ClientProtocol {
         let homeserverURL = credentials.restorationToken.session.homeserverUrl
+        guard CIVCOMPolicy.allowsAccountProvider(homeserverURL) else { throw CIVCOMProviderError.notAllowed }
         
         let builder = makeBaseBuilder(httpProxy: URL(string: homeserverURL)?.globalProxy,
                                       discoverSlidingSync: false,
@@ -82,6 +85,7 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                        appSettings: CommonSettingsProtocol,
                        appHooks: AppHooks) async throws -> ClientProtocol {
         let homeserverURL = credentials.restorationToken.session.homeserverUrl
+        guard CIVCOMPolicy.allowsAccountProvider(homeserverURL) else { throw CIVCOMProviderError.notAllowed }
         
         let builder = makeBaseBuilder(setupEncryption: false,
                                       httpProxy: URL(string: homeserverURL)?.globalProxy,
@@ -161,6 +165,7 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                        appHooks: AppHooks) async throws -> ClientProtocol {
         let client: ClientProtocol = try await appHooks.clientFactoryHook.configure(builder, toRestore: mode.session).build()
         
+        guard CIVCOMPolicy.allowsAccountProvider(client.homeserver()) else { throw CIVCOMProviderError.notAllowed }
         switch mode {
         case .authentication:
             break

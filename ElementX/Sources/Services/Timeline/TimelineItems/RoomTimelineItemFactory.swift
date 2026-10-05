@@ -44,6 +44,7 @@ nonisolated struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
             case .unableToDecrypt(let encryptedMessage):
                 return buildEncryptedTimelineItem(eventItemProxy, messageLikeContent, encryptedMessage, isOutgoing)
             case .liveLocation(let content):
+                guard CIVCOMPolicy.mapsEnabled else { return nil }
                 return buildLiveLocationTimelineItem(eventItemProxy, messageLikeContent, content, isOutgoing)
             case .other:
                 return nil // We shouldn't receive these without asking for custom event types.
@@ -70,8 +71,10 @@ nonisolated struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                                        previousAvatarURLString: prevAvatarUrl,
                                                        isOutgoing: isOutgoing)
         case .callInvite:
+            guard CIVCOMPolicy.callsEnabled else { return nil }
             return buildCallInviteTimelineItem(for: eventItemProxy)
         case .rtcNotification(let callIntent, let declinedBy, let activeMembers, let callStartMillis, let isJoined):
+            guard CIVCOMPolicy.callsEnabled else { return nil }
             return buildCallNotificationTimelineItem(for: eventItemProxy,
                                                      isDM: isDM,
                                                      callIntent: callIntent,
@@ -185,6 +188,7 @@ nonisolated struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                 return buildAudioTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, audioMessageContent, isOutgoing)
             }
         case .location(let locationMessageContent):
+            guard CIVCOMPolicy.mapsEnabled else { return nil }
             return buildLocationTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, locationMessageContent, isOutgoing)
         case .gallery(let galleryMessageContent):
             return buildGalleryTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, galleryMessageContent, isOutgoing)

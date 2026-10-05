@@ -16,6 +16,9 @@ struct LegalInformationScreen: View {
     var body: some View {
         Form {
             Section {
+                ListRow(label: .plain(title: "CIVCOM · KG PSP"), kind: .label)
+                ListRow(label: .plain(title: "Element X · AGPL-3.0"),
+                        kind: .button { openURL("https://github.com/KGPSP/civcom-ios") })
                 ListRow(label: .plain(title: L10n.commonCopyright),
                         kind: .button { openURL(context.viewState.copyrightURL) })
                 ListRow(label: .plain(title: L10n.commonAcceptableUsePolicy),

@@ -84,6 +84,7 @@ class RoomMemberDetailsScreenViewModel: RoomMemberDetailsScreenViewModelType, Ro
         case .createDirectChat:
             Task { await createDirectChat() }
         case .startCall(let roomID, let isVoiceCall):
+            guard CIVCOMPolicy.callsEnabled else { return }
             Task { await startCall(roomID: roomID, isVoiceCall: isVoiceCall) }
         case .verifyUser:
             actionsSubject.send(.verifyUser(userID: state.userID))

@@ -104,6 +104,7 @@ class PinnedEventsTimelineFlowCoordinator: FlowCoordinatorProtocol {
     
     private func presentMapNavigator(interactionMode: LocationSharingInteractionMode,
                                      timelineController: TimelineControllerProtocol) {
+        guard CIVCOMPolicy.mapsEnabled else { return }
         let stackCoordinator = NavigationStackCoordinator()
         
         let params = LocationSharingScreenCoordinatorParameters(interactionMode: interactionMode,

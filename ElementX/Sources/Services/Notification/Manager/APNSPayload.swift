@@ -9,10 +9,13 @@
 import Foundation
 
 struct APSAlert: Encodable {
-    let locKey: String
+    let locKey: String?
+    let title = "CIVCOM"
+    let body = "Nowa wiadomość"
     let locArgs: [String]
     
     enum CodingKeys: String, CodingKey {
+        case title, body
         case locKey = "loc-key"
         case locArgs = "loc-args"
     }

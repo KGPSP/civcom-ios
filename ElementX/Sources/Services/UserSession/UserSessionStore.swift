@@ -114,8 +114,7 @@ class UserSessionStore: UserSessionStoreProtocol {
         let voiceMessageMediaManager = VoiceMessageMediaManager(mediaProvider: mediaProvider)
         
         let liveLocationManager = await MainActor.run {
-            LiveLocationManager(clientProxy: clientProxy,
-                                appSettings: appSettings)
+            CIVCOMDisabledLocationManager()
         }
         
         return UserSession(clientProxy: clientProxy,
