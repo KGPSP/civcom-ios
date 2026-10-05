@@ -7,6 +7,7 @@
 //
 
 @testable import ElementX
+import MatrixRustSDKMocks
 import Testing
 
 @MainActor
@@ -20,21 +21,21 @@ struct LoginScreenViewModelTests {
     var service: AuthenticationServiceProtocol!
     
     @Test
-    mutating func basicServer() async {
-        // Given the view model configured for a basic server example.com that only supports password authentication.
-        await setupViewModel()
+    mutating func basicServer() async throws {
+        // Given the view model configured for a basic server soia.info that only supports password authentication.
+        try await setupViewModel()
         
         // Then the view state should be updated with the homeserver and show the login form.
-        #expect(context.viewState.homeserver == .mockBasicServer,
+        #expect(context.viewState.homeserver == .init(accountProvider: .generic("soia.info"), loginMode: .password),
                 "The homeserver data should should match the new homeserver.")
         #expect(context.viewState.loginMode == .password,
                 "The login form should be shown.")
     }
     
     @Test
-    mutating func usernameWithEmptyPassword() async {
+    mutating func usernameWithEmptyPassword() async throws {
         // Given a form with an empty username and password.
-        await setupViewModel()
+        try await setupViewModel()
         #expect(context.password.isEmpty,
                 "The initial value for the password should be empty.")
         #expect(context.username.isEmpty,
@@ -56,9 +57,9 @@ struct LoginScreenViewModelTests {
     }
     
     @Test
-    mutating func emptyUsernameWithPassword() async {
+    mutating func emptyUsernameWithPassword() async throws {
         // Given a form with an empty username and password.
-        await setupViewModel()
+        try await setupViewModel()
         #expect(context.password.isEmpty,
                 "The initial value for the password should be empty.")
         #expect(context.username.isEmpty,
@@ -80,9 +81,9 @@ struct LoginScreenViewModelTests {
     }
     
     @Test
-    mutating func validCredentials() async {
+    mutating func validCredentials() async throws {
         // Given a form with an empty username and password.
-        await setupViewModel()
+        try await setupViewModel()
         #expect(context.password.isEmpty,
                 "The initial value for the password should be empty.")
         #expect(context.username.isEmpty,
@@ -106,8 +107,8 @@ struct LoginScreenViewModelTests {
     @Test
     mutating func loadingServerWithoutPassword() async throws {
         // Given a form with valid credentials.
-        await setupViewModel()
-        context.username = "@bob:example.com"
+        try await setupViewModel()
+        context.username = "@bob:soia.info"
         #expect(!context.viewState.hasValidCredentials,
                 "The credentials should be not be valid without a password.")
         #expect(!context.viewState.isLoading,
@@ -131,8 +132,8 @@ struct LoginScreenViewModelTests {
     @Test
     mutating func loadingServerWithPasswordEntered() async throws {
         // Given a form with valid credentials.
-        await setupViewModel()
-        context.username = "@bob:example.com"
+        try await setupViewModel()
+        context.username = "@bob:soia.info"
         context.password = "12345678"
         #expect(context.viewState.hasValidCredentials,
                 "The credentials should be valid.")
@@ -156,14 +157,14 @@ struct LoginScreenViewModelTests {
     
     @Test
     mutating func oAuthServer() async throws {
-        // Given the screen configured for matrix.org
-        await setupViewModel()
+        // Given the official provider configured for OAuth.
+        try await setupViewModel(supportsOAuth: true)
         
         // When entering a username for a user on a homeserver with OAuth.
         let deferred = deferFulfillment(viewModel.actions) {
             $0.isConfiguredForOAuth
         }
-        context.username = "@bob:company.com"
+        context.username = "@bob:soia.info"
         context.send(viewAction: .parseUsername)
         try await deferred.fulfill()
         
@@ -174,8 +175,8 @@ struct LoginScreenViewModelTests {
     
     @Test
     mutating func unsupportedServer() async throws {
-        // Given the screen configured for matrix.org
-        await setupViewModel()
+        // Given the screen configured for soia.info
+        try await setupViewModel()
         #expect(context.alertInfo == nil,
                 "There shouldn't be an alert when the screen loads.")
         
@@ -193,9 +194,9 @@ struct LoginScreenViewModelTests {
     }
     
     @Test
-    mutating func elementProRequired() async throws {
-        // Given the screen configured for matrix.org
-        await setupViewModel()
+    mutating func foreignProviderCannotTriggerElementProOrSDK() async throws {
+        // Given the screen configured for soia.info
+        try await setupViewModel()
         #expect(context.alertInfo == nil,
                 "There shouldn't be an alert when the screen loads.")
         
@@ -208,40 +209,39 @@ struct LoginScreenViewModelTests {
         try await deferred.fulfill()
         
         // Then the view state should be updated to show an alert.
-        #expect(context.alertInfo?.id == .elementProAlert,
+        #expect(context.alertInfo?.id == .unknown,
                 "An alert should be shown to the user.")
     }
     
     @Test
-    mutating func loginHint() async {
-        await setupViewModel(loginHint: "")
+    mutating func loginHint() async throws {
+        try await setupViewModel(loginHint: "")
         #expect(context.username == "")
         
-        await setupViewModel(loginHint: "alice")
+        try await setupViewModel(loginHint: "alice")
         #expect(context.username == "alice")
         
-        await setupViewModel(loginHint: "mxid:@alice:example.com")
-        #expect(context.username == "@alice:example.com")
+        try await setupViewModel(loginHint: "mxid:@alice:soia.info")
+        #expect(context.username == "@alice:soia.info")
     }
     
     // MARK: - Helpers
     
-    private mutating func setupViewModel(serverNameOrBaseURL: String = "example.com", loginHint: String? = nil) async {
+    private mutating func setupViewModel(loginHint: String? = nil, supportsOAuth: Bool = false) async throws {
         let appSettings = AppSettings.volatile()
         
-        clientFactory = ClientFactoryMock(.init())
+        var configuration = ClientFactoryMock.Configuration()
+        configuration.homeserverClients["soia.info"] = ClientSDKMock(.init(serverName: "soia.info", homeserverURL: "https://matrix.soia.info", oAuthLoginURL: supportsOAuth ? "https://auth.soia.info/authorize" : nil,
+                                                                           supportsOAuthCreatePrompt: false, supportsPasswordLogin: !supportsOAuth))
+        clientFactory = ClientFactoryMock(configuration)
         service = AuthenticationService(userSessionStore: UserSessionStoreMock(.init()),
                                         encryptionKeyProvider: EncryptionKeyProvider(),
                                         classicAppManager: nil,
                                         clientFactory: clientFactory,
                                         appSettings: appSettings,
-                                        appHooks: AppHooks())
+                                        appHooks: AppHooks(), oauthMetadataProvider: CIVCOMTestOAuthMetadataProvider())
         
-        guard case .success = await service
-            .configure(for: serverNameOrBaseURL, flow: .login) else {
-            Issue.record("A valid server should be configured for the test.")
-            return
-        }
+        try await service.configure(for: "soia.info", flow: .login).get()
         
         viewModel = LoginScreenViewModel(authenticationService: service,
                                          loginHint: loginHint,
