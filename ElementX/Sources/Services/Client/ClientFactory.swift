@@ -21,16 +21,16 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                                   appSettings: AppSettings,
                                   appHooks: AppHooks) async throws -> ClientProtocol {
         guard CIVCOMPolicy.allowsAccountProvider(serverNameOrBaseURL) else { throw AuthenticationServiceError.invalidServerNameOrBaseURL }
-        let builder = makeBaseBuilder(httpProxy: appSettings.websiteURL.globalProxy,
-                                      discoverSlidingSync: true,
-                                      sessionDelegate: clientSessionDelegate,
-                                      appHooks: appHooks,
-                                      enableOnlySignedDeviceIsolationMode: appSettings.enableOnlySignedDeviceIsolationMode,
-                                      threadsEnabled: appSettings.threadsEnabled)
+        let builder = try makeBaseBuilder(httpProxy: appSettings.websiteURL.globalProxy,
+                                          discoverSlidingSync: true,
+                                          sessionDelegate: clientSessionDelegate,
+                                          appHooks: appHooks,
+                                          enableOnlySignedDeviceIsolationMode: appSettings.enableOnlySignedDeviceIsolationMode,
+                                          threadsEnabled: appSettings.threadsEnabled)
             .enableAutomaticBackPagination(enableAutomaticBackPagination: appSettings.automaticBackPaginationEnabled)
             .sqliteStore(config: .init(dataPath: sessionDirectories.dataPath, cachePath: sessionDirectories.cachePath)
                 .passphrase(passphrase: passphrase))
-            .serverNameOrHomeserverUrl(serverNameOrUrl: serverNameOrBaseURL)
+            .homeserverUrl(url: CIVCOMPolicy.authenticationAPI(for: serverNameOrBaseURL).absoluteString)
         
         return try await build(builder, for: .authentication, appHooks: appHooks)
     }
@@ -40,14 +40,14 @@ nonisolated struct ClientFactory: ClientFactoryProtocol {
                             appSettings: AppSettings,
                             appHooks: AppHooks) async throws -> ClientProtocol {
         guard CIVCOMPolicy.allowsAccountProvider(serverNameOrBaseURL) else { throw AuthenticationServiceError.invalidServerNameOrBaseURL }
-        let builder = makeBaseBuilder(httpProxy: appSettings.websiteURL.globalProxy,
-                                      discoverSlidingSync: true,
-                                      sessionDelegate: clientSessionDelegate,
-                                      appHooks: appHooks,
-                                      enableOnlySignedDeviceIsolationMode: appSettings.enableOnlySignedDeviceIsolationMode,
-                                      threadsEnabled: appSettings.threadsEnabled)
+        let builder = try makeBaseBuilder(httpProxy: appSettings.websiteURL.globalProxy,
+                                          discoverSlidingSync: true,
+                                          sessionDelegate: clientSessionDelegate,
+                                          appHooks: appHooks,
+                                          enableOnlySignedDeviceIsolationMode: appSettings.enableOnlySignedDeviceIsolationMode,
+                                          threadsEnabled: appSettings.threadsEnabled)
             .inMemoryStore()
-            .serverNameOrHomeserverUrl(serverNameOrUrl: serverNameOrBaseURL)
+            .homeserverUrl(url: CIVCOMPolicy.authenticationAPI(for: serverNameOrBaseURL).absoluteString)
         
         return try await build(builder, for: .classicAppAccount, appHooks: appHooks)
     }
